@@ -3,10 +3,13 @@
 **Simulated client:** GulfMart Retail Group (UAE) — a fictional retail/e-commerce
 company across Dubai, Abu Dhabi, Sharjah, Ajman and Ras Al Khaimah.
 
-**Purpose:** portfolio project targeting a Deloitte-style Junior Software
-Developer / Data Engineer role, built as a real engagement rather than a
-Kaggle notebook: business requirements → data → ETL → warehouse → analytics
-→ ML → BI → decisions.
+**Purpose:** an end-to-end data engineering and decision-intelligence
+platform, built as a real engagement rather than a Kaggle notebook: business
+requirements → data → ETL → warehouse → analytics → ML → BI → decisions. It
+pairs a full analytics core (star schema, SQL, Python EDA, forecasting,
+Power BI) with a software engineering layer (FastAPI service, pytest,
+Docker, GitHub Actions, Airflow) so it demonstrates both data engineering
+and software engineering skills in one project.
 
 Data sources are a documented mix of **public** (Olist, DataCo, M5, UAE Open
 Data), **synthetic** (inventory, purchase orders, warehouses — generated from
@@ -15,39 +18,7 @@ risk scores, forecasts). This is stated explicitly, not implied.
 
 ---
 
-## 1. Does the project make sense as designed?
-
-Yes, with one caveat. As originally scoped it is a strong **Data
-Analyst / Analytics Engineer** project (star schema, SQL, Python EDA,
-forecasting, Power BI). A Junior Software Developer role at Deloitte weighs
-software engineering — APIs, testing, CI/CD, orchestration, containerization
-— more heavily than the original scope did. This repository is the corrected
-version: the analytics core is unchanged, but a software layer (FastAPI
-service, pytest, Docker, GitHub Actions, Airflow) has been added around it so
-the project demonstrates both halves of the role.
-
-## 2. Alignment with the Deloitte UAE JD
-
-| JD requirement | Covered by | Strength |
-|---|---|---|
-| Data modelling | Star schema, `database/schema/`, ERD in `docs/architecture.md` | Strong |
-| Data quality / master data / reference data | `etl/validate/`, `sql/01_data_quality/`, `docs/data_quality_framework.md` | Strong |
-| SQL (incl. window functions) | `sql/02_sales/` … `sql/07_kpi/`, 30–40 queries | Strong |
-| Python | `etl/`, `src/forecasting`, `src/anomaly_detection`, `src/supplier_risk` | Strong |
-| Big data (Spark/Hadoop) | `etl/transform/spark_transform.py` (PySpark, used only for the transform step that benefits from it — see §6) | Deliberately scoped |
-| ETL/ELT + automated workflows | `etl/`, `airflow/dags/gulfmart_pipeline.py` | Strong |
-| Data warehousing | PostgreSQL, raw → staging → warehouse → analytics schemas | Strong |
-| Reporting / visualisation / storytelling | Power BI (`powerbi/`), Excel (`excel/`), `reports/` | Strong |
-| AI | Forecasting (ETS/SARIMA/XGBoost), anomaly detection (IQR/Z-score/Isolation Forest), supplier risk scoring | Strong |
-| Risk management | `src/supplier_risk/`, KRI dashboard page in Power BI | Strong |
-| Software development | `src/api/` (FastAPI), tests, CI/CD, Docker | Added |
-| Agile / project management | `docs/backlog.md` (sprint-style breakdown of the 12-week plan) | Partial by design — this is a solo project |
-
-Overall: ~75–85% direct coverage; the rest (formal Agile ceremonies,
-production-scale Hadoop) is intentionally out of scope for a portfolio
-project — see §6 for why.
-
-## 3. Architecture
+## 1. Architecture
 
 ```
                          PUBLIC DATA SOURCES
@@ -95,7 +66,7 @@ project — see §6 for why.
                        Executive report + recommendations
 ```
 
-## 4. Full repository layout
+## 2. Full repository layout
 
 ```
 uae-supply-chain-intelligence/
@@ -105,7 +76,7 @@ uae-supply-chain-intelligence/
 ├── sql/01_data_quality … 07_kpi       # 30–40 analysis queries
 ├── notebooks/                         # profiling, EDA, modelling notebooks
 ├── src/
-│   ├── api/                           # FastAPI service (see §5)
+│   ├── api/                           # FastAPI service (see §3)
 │   ├── forecasting/                   # Seasonal Naive, ETS, SARIMA, XGBoost
 │   ├── anomaly_detection/             # IQR, Z-score, Isolation Forest
 │   ├── supplier_risk/                 # weighted risk score
@@ -123,7 +94,7 @@ uae-supply-chain-intelligence/
 └── Makefile
 ```
 
-## 5. Software layer: what got rate limiting / caching / throttling, and why
+## 3. Software layer: what got rate limiting / caching / throttling, and why
 
 Per the "don't add tech for keywords" rule this project holds itself to,
 these controls are applied only where a real problem exists, not everywhere:
@@ -143,22 +114,22 @@ these controls are applied only where a real problem exists, not everywhere:
   Data's public API, to stay within its fair-use limits — it is not applied
   to local file reads (Olist/DataCo/M5 are downloaded once, not polled).
 
-## 6. Why PySpark and Airflow are here, and why Hadoop isn't
+## 4. Why PySpark and Airflow are here, and why Hadoop isn't
 
 - **PySpark** is used in exactly one place — `etl/transform/spark_transform.py`
   — for the join/aggregate step across the Olist + DataCo transaction volumes
   where a distributed engine is a defensible choice, not decoration. Small,
   single-table cleaning stays in pandas.
 - **Airflow** orchestrates the daily pipeline (`airflow/dags/gulfmart_pipeline.py`)
-  because the JD explicitly asks for "automated workflows for moving and
-  processing data."
+  to demonstrate automated, scheduled workflows for moving and processing
+  data end to end.
 - **Hadoop** is deliberately omitted: nothing in this architecture needs a
   distributed filesystem at this data volume, and adding it would be
   resume-keyword padding rather than an architectural decision — the kind of
   thing this project is designed to avoid (see `docs/architecture.md` §"technology
   justification").
 
-## 7. Getting started
+## 5. Getting started
 
 ```bash
 git clone <repo-url> && cd uae-supply-chain-intelligence
