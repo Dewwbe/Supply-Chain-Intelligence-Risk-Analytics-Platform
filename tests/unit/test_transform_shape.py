@@ -62,6 +62,7 @@ def _dataco_fixture() -> pd.DataFrame:
             "order date (DateOrders)": ["2018-01-01"],
             "shipping date (DateOrders)": ["2018-01-04"],
             "Order Customer Id": [42],
+            "Customer Segment": ["Consumer"],
             "Product Card Id": [777],
             "Product Name": ["Trail Running Shoe"],
             "Category Name": ["Cleats"],
