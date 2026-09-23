@@ -12,6 +12,17 @@ pandas==2.2.2
 numpy==1.26.4
 sqlalchemy==2.0.32
 psycopg[binary]==3.2.1
+tabulate==0.10.0
+
+# --- data acquisition / profiling (Phase 1, see notebooks/01_data_profiling.ipynb) ---
+# >=1.8.0 required for the new API-token auth (KAGGLE_API_TOKEN / ~/.kaggle/access_token),
+# not just the legacy kaggle.json
+kaggle==2.2.4
+jupyter==1.1.1
+ipykernel==6.29.5
+# ydata-profiling is optional (PRD §Phase 1 tools) — heavy dependency, install
+# only if you want its auto-generated HTML report:
+#   pip install ydata-profiling==4.10.0
 
 # --- analytics / ml ---
 scipy==1.13.1
