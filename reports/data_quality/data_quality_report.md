@@ -1,0 +1,9 @@
+# Data Quality Report — Phase 1
+
+| dataset           |   rows |   columns |   missing_pct |   duplicate_rows |   critical_issues |   warning_issues | verdict   |
+|:------------------|-------:|----------:|--------------:|-----------------:|------------------:|-----------------:|:----------|
+| olist_orders      |  99441 |         8 |          0.62 |                0 |                 0 |                0 | PASS      |
+| olist_order_items | 112650 |         7 |          0    |                0 |                 0 |            24568 | WARN      |
+| olist_products    |  32951 |         9 |          0.83 |                0 |                 0 |                0 | PASS      |
+| dataco_shipments  | 180519 |        53 |          3.51 |                0 |                 0 |            26041 | WARN      |
+| uae_trade         |  21593 |        16 |         19.57 |                0 |                 0 |             3916 | WARN      |

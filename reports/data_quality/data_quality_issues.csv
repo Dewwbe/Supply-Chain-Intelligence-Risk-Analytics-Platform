@@ -1,0 +1,13 @@
+dataset,check,column,severity,count,detail
+olist_order_items,outlier_iqr,price,warning,8427,"8427 values outside [-102.60, 277.40]"
+olist_order_items,outlier_iqr,freight_value,warning,12134,"12134 values outside [0.98, 33.25]"
+olist_order_items,outlier_zscore,price,warning,1966,1966 values with |z| > 3.0
+olist_order_items,outlier_zscore,freight_value,warning,2041,2041 values with |z| > 3.0
+dataco_shipments,outlier_iqr,Sales,warning,488,"488 values outside [-149.98, 569.91]"
+dataco_shipments,outlier_iqr,Order Item Product Price,warning,2048,"2048 values outside [-174.99, 424.98]"
+dataco_shipments,outlier_iqr,Benefit per order,warning,18942,"18942 values outside [-79.70, 151.50]"
+dataco_shipments,outlier_zscore,Sales,warning,467,467 values with |z| > 3.0
+dataco_shipments,outlier_zscore,Order Item Product Price,warning,488,488 values with |z| > 3.0
+dataco_shipments,outlier_zscore,Benefit per order,warning,3608,3608 values with |z| > 3.0
+uae_trade,outlier_iqr,OBS_VALUE,warning,3554,"3554 values outside [-67248498.23, 112375395.72]"
+uae_trade,outlier_zscore,OBS_VALUE,warning,362,362 values with |z| > 3.0

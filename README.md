@@ -143,5 +143,6 @@ make test          # pytest, unit + integration
 ```
 
 Full 12-week build plan: [`docs/implementation_plan.md`](docs/implementation_plan.md)
+Business requirements: [`docs/business_requirements.md`](docs/business_requirements.md)
 Coding standards: [`docs/coding_standards.md`](docs/coding_standards.md)
 Data/KPI dictionaries: [`docs/data_dictionary.md`](docs/data_dictionary.md), [`docs/kpi_dictionary.md`](docs/kpi_dictionary.md)
