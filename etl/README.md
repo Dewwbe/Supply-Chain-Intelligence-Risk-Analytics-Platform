@@ -31,17 +31,24 @@
   `warehouse.py` does the staging -> warehouse upserts
   (`INSERT ... ON CONFLICT DO UPDATE` on each table's natural key), then
   resolves surrogate keys for the fact tables.
+- `synthesize/` (Phase 3) — `dim_store`, `dim_transport`,
+  `fact_purchase_orders`, `fact_returns`, and `fact_inventory` have no
+  equivalent in Olist/DataCo, so each is simulated from distributions
+  derived from the real data (never a fabricated constant, never
+  `random` — every value is a deterministic hash of a real key, see
+  `rng.py`). Full breakdown in `docs/data_dictionary.md` "SYNTHETIC data
+  (Phase 3)". `load/warehouse.py` calls into this package; it isn't
+  invoked directly by `run_local.py`/the DAG.
 
-## Known scope limits (Phase 2)
+## Known scope limits
 
-- `fact_inventory` isn't populated — neither Olist nor DataCo has stock-level
-  data, and fabricating it isn't in scope here (see docs/implementation_plan.md).
 - `fact_shipments` is DataCo-only — Olist has no scheduled/real shipping-day
   columns. `dim_supplier` (from DataCo's 11 departments) and `dim_warehouse`
   (5 rows, one per emirate) are both disclosed relabelings, same convention
   as the emirate assignment — see `docs/data_dictionary.md`.
-- `transport_cost` on `fact_shipments` is always `NULL` — DataCo has no cost
-  column to source it from.
+- `fact_inventory` only covers the top 500 products by quantity sold, not
+  all ~33k — long-tail SKUs with a handful of lifetime sales don't produce
+  meaningful stockout/turnover analytics (see `etl/synthesize/inventory.py`).
 - `staging.uae_trade` is loaded but not yet joined into the star schema —
   that's Phase 4 (SQL analytics / macro correlation).
 

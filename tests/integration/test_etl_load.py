@@ -49,6 +49,7 @@ def _sample_sales_lines() -> pd.DataFrame:
             "scheduled_ship_days": [None, 4],
             "real_ship_days": [None, 3],
             "source_department": [None, "Fitness"],
+            "customer_segment": [None, "Consumer"],
         }
     )
 
@@ -61,7 +62,18 @@ def test_load_warehouse_is_idempotent():
 
     engine = get_engine()
     with engine.connect() as conn:
-        count = conn.execute(
-            text("SELECT COUNT(*) FROM warehouse.fact_sales " "WHERE order_id IN ('o1', 'd1')")
+        sales_count = conn.execute(
+            text("SELECT COUNT(*) FROM warehouse.fact_sales WHERE order_id IN ('o1', 'd1')")
         ).scalar()
-    assert count == 2
+        po_count_after_2_runs = conn.execute(
+            text("SELECT COUNT(*) FROM warehouse.fact_purchase_orders")
+        ).scalar()
+
+    load_warehouse(sales_lines)  # third run: synthetic tables must not duplicate either
+    with engine.connect() as conn:
+        po_count_after_3_runs = conn.execute(
+            text("SELECT COUNT(*) FROM warehouse.fact_purchase_orders")
+        ).scalar()
+
+    assert sales_count == 2
+    assert po_count_after_2_runs == po_count_after_3_runs

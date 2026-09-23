@@ -53,6 +53,7 @@ def build_sales_lines(shipments: pd.DataFrame) -> pd.DataFrame:
             "scheduled_ship_days": df["Days for shipment (scheduled)"],
             "real_ship_days": df["Days for shipping (real)"],
             "source_department": df["Department Name"],
+            "customer_segment": df["Customer Segment"],
         }
     )
     return out[SALES_LINE_COLUMNS]

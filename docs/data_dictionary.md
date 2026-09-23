@@ -55,6 +55,26 @@ source column) — same bucket as `warehouses.csv`, not a new category.
 Implementation: `etl/transform/master_data.py:assign_emirate` and
 `etl/load/warehouse.py:upsert_dim_supplier`/`upsert_dim_warehouse`.
 
+## SYNTHETIC data (Phase 3)
+
+`dim_store`, `dim_transport`, `fact_purchase_orders`, `fact_returns`, and
+`fact_inventory` have no equivalent at all in Olist/DataCo (no physical
+stores, no PO history, no returns, no stock levels). Each is simulated
+from distributions derived from the real data — never a fabricated
+constant — and implemented in `etl/synthesize/`:
+
+| Table / column | Derived from | Method |
+|---|---|---|
+| `dim_product.unit_cost` | real `unit_price` | category margin rate in [15%, 45%], `etl/synthesize/product_cost.py` |
+| `dim_supplier.standard_lead_time_days` | — | deterministic per supplier, [3, 21] days, `etl/synthesize/supplier_terms.py` |
+| `dim_store` / `fact_sales.store_key` | — | 1 Online + 8 physical stores across the 5 emirates; each sale assigned ~75% Online / 25% to a physical store in its own (already-relabeled) emirate, `etl/synthesize/stores.py` |
+| `dim_transport` / `fact_shipments.transport_key`, `transport_cost` | real `Shipping Mode`, a modeled intra-UAE distance | 2 fictional carriers (not real logistics companies) x the 4 real shipping modes; cost = distance x carrier's AED/km, `etl/synthesize/transport.py` |
+| `fact_purchase_orders` | real per-product sales velocity (from `fact_sales`) | order frequency/size scaled to how much of that product actually sold; lead time from `dim_supplier`; ~5% modeled cancellation rate, `etl/synthesize/purchase_orders.py` |
+| `fact_returns` | real `fact_sales` rows | per-category return rate in [2%, 12%] sampled against real sales lines — the sale is real, whether it was "returned" is synthetic, `etl/synthesize/returns.py` |
+| `fact_inventory` | real daily `fact_sales` quantity, top 500 products by volume | (s, S) reorder-point simulation per product's one assigned primary warehouse; `sold_quantity` is real, stock levels are simulated, `etl/synthesize/inventory.py`. Scoped to the top 500 products by quantity — not all ~33k — since long-tail SKUs with a handful of lifetime sales don't produce meaningful stockout/turnover analytics; a stated scope limit, not a silent drop. |
+
+Every value here is a deterministic function of a real key (`etl/synthesize/rng.py`), so re-running the pipeline reproduces identical synthetic data — nothing here uses `random`.
+
 ## Reference tables (`database/seed/`)
 `ref_shipping_mode`, `ref_product_category`, `ref_emirate`,
 `ref_order_status`, `ref_delivery_status`, `ref_risk_level`, `ref_currency`.
