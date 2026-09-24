@@ -75,6 +75,31 @@ constant — and implemented in `etl/synthesize/`:
 
 Every value here is a deterministic function of a real key (`etl/synthesize/rng.py`), so re-running the pipeline reproduces identical synthetic data — nothing here uses `random`.
 
+## UAE contextual layer (Phase 5)
+
+`reference.ref_emirate` now lists all 7 real UAE emirates (Dubai, Abu Dhabi,
+Sharjah, Ajman, Ras Al Khaimah, Fujairah, Umm Al Quwain) for geographic
+reference completeness — `is_gulfmart_operating` still marks only the 5
+GulfMart actually operates in (`docs/business_requirements.md` §1)
+unchanged. The synthetic emirate assignment (`etl/transform/master_data.py`)
+still only ever picks from those 5, so `dim_location`/`fact_sales` will
+never show Fujairah/Umm Al Quwain rows in practice — adding the other 2 to
+the reference table doesn't change what data GulfMart is modeled as having.
+
+`warehouse.dim_date.is_uae_holiday`/`season_label` (left `False`/`NULL` in
+Phase 2 pending a real calendar) are now populated from
+`src/common/uae_calendar.py`, which draws a hard line between two kinds of
+"season":
+
+| Kind | Categories | Basis |
+|---|---|---|
+| Real, published dates | Ramadan, Eid al-Fitr, Eid al-Adha, National Day | Commonly cited Gregorian equivalents of the Islamic lunar calendar (2015-2018, the years Olist+DataCo span) / the fixed December 2, 1971 civil date — a calendrical fact, not fabricated data |
+| Stated, disclosed windows | Summer, Back-to-school, Year-end | Declared month/day ranges (e.g. "Summer = June 1 - September 15"), not discovered from the data — a different definition would give different test results, which is exactly why these are *tested*, never assumed, in `notebooks/02_sales_eda.ipynb` §4 |
+
+Only Eid (both) and National Day set `is_uae_holiday` — Ramadan itself
+isn't a UAE public holiday (shortened hours, not a closure), so it only
+ever sets `season_label`.
+
 ## Reference tables (`database/seed/`)
 `ref_shipping_mode`, `ref_product_category`, `ref_emirate`,
 `ref_order_status`, `ref_delivery_status`, `ref_risk_level`, `ref_currency`.
