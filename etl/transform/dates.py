@@ -1,15 +1,18 @@
 """Date standardization and `dim_date` population.
 
-`season_label`/`is_uae_holiday` are deliberately left NULL/False here — a
-Ramadan/Eid calendar varies year to year and guessing it would be exactly
-the kind of unearned assumption docs/business_requirements.md §7 rules out
-("Seasonal/holiday effects... tested statistically in Phase 4/5, never
-assumed"). Populate them later from a real Hijri calendar source if needed.
+`season_label`/`is_uae_holiday` are populated from `src/common/uae_calendar.py`
+(Phase 5) — real published Ramadan/Eid/National Day dates plus disclosed
+Summer/Back-to-school/Year-end window definitions, covering 2015-2018 (the
+years Olist+DataCo actually span). This only labels calendar days; whether
+any of these categories actually correlates with demand is a question for
+the hypothesis tests in notebooks/02_sales_eda.ipynb, never assumed here
+(docs/business_requirements.md §7).
 """
 
 from __future__ import annotations
 
 import pandas as pd
+from src.common.uae_calendar import is_uae_public_holiday, season_label
 
 
 def parse_dates(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
@@ -39,7 +42,7 @@ def build_dim_date(start: pd.Timestamp, end: pd.Timestamp) -> pd.DataFrame:
             "quarter": dates.quarter,
             "year": dates.year,
             "is_weekend": dates.dayofweek.isin([4, 5]),  # UAE weekend: Fri/Sat
-            "is_uae_holiday": False,
-            "season_label": None,
+            "is_uae_holiday": [is_uae_public_holiday(d) for d in dates],
+            "season_label": [season_label(d) for d in dates],
         }
     )
