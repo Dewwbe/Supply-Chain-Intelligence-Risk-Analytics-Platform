@@ -54,6 +54,9 @@ def build_sales_lines(shipments: pd.DataFrame) -> pd.DataFrame:
             "real_ship_days": df["Days for shipping (real)"],
             "source_department": df["Department Name"],
             "customer_segment": df["Customer Segment"],
+            "discount_amount_aed": df["Order Item Discount"].apply(
+                lambda v: convert_to_aed(v, ORIGINAL_CURRENCY)
+            ),
         }
     )
     return out[SALES_LINE_COLUMNS]

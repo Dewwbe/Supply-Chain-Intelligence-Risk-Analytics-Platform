@@ -50,30 +50,54 @@ def _sample_sales_lines() -> pd.DataFrame:
             "real_ship_days": [None, 3],
             "source_department": [None, "Fitness"],
             "customer_segment": [None, "Consumer"],
+            "discount_amount_aed": [0.0, 5.0],
         }
     )
 
 
+def _cleanup(engine) -> None:
+    """Remove this test's rows so a shared local dev database isn't left with
+    permanent test residue (fact_sales.order_id 'o1'/'d1' don't collide with
+    any real Olist/DataCo id, but there's no reason to leave them behind).
+    """
+    with engine.begin() as conn:
+        conn.execute(
+            text(
+                "DELETE FROM warehouse.fact_returns WHERE sales_key IN "
+                "(SELECT sales_key FROM warehouse.fact_sales WHERE order_id IN ('o1', 'd1'))"
+            )
+        )
+        conn.execute(text("DELETE FROM warehouse.fact_sales WHERE order_id IN ('o1', 'd1')"))
+        conn.execute(
+            text(
+                "DELETE FROM warehouse.fact_purchase_orders WHERE po_source_id LIKE 'PO-DEPT-Fitness-p2-%'"
+            )
+        )
+
+
 def test_load_warehouse_is_idempotent():
     sales_lines = _sample_sales_lines()
-
-    load_warehouse(sales_lines)
-    load_warehouse(sales_lines)  # second run must not duplicate rows
-
     engine = get_engine()
-    with engine.connect() as conn:
-        sales_count = conn.execute(
-            text("SELECT COUNT(*) FROM warehouse.fact_sales WHERE order_id IN ('o1', 'd1')")
-        ).scalar()
-        po_count_after_2_runs = conn.execute(
-            text("SELECT COUNT(*) FROM warehouse.fact_purchase_orders")
-        ).scalar()
 
-    load_warehouse(sales_lines)  # third run: synthetic tables must not duplicate either
-    with engine.connect() as conn:
-        po_count_after_3_runs = conn.execute(
-            text("SELECT COUNT(*) FROM warehouse.fact_purchase_orders")
-        ).scalar()
+    try:
+        load_warehouse(sales_lines)
+        load_warehouse(sales_lines)  # second run must not duplicate rows
 
-    assert sales_count == 2
-    assert po_count_after_2_runs == po_count_after_3_runs
+        with engine.connect() as conn:
+            sales_count = conn.execute(
+                text("SELECT COUNT(*) FROM warehouse.fact_sales WHERE order_id IN ('o1', 'd1')")
+            ).scalar()
+            po_count_after_2_runs = conn.execute(
+                text("SELECT COUNT(*) FROM warehouse.fact_purchase_orders")
+            ).scalar()
+
+        load_warehouse(sales_lines)  # third run: synthetic tables must not duplicate either
+        with engine.connect() as conn:
+            po_count_after_3_runs = conn.execute(
+                text("SELECT COUNT(*) FROM warehouse.fact_purchase_orders")
+            ).scalar()
+
+        assert sales_count == 2
+        assert po_count_after_2_runs == po_count_after_3_runs
+    finally:
+        _cleanup(engine)

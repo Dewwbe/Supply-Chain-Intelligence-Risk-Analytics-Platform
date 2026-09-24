@@ -69,6 +69,7 @@ def _dataco_fixture() -> pd.DataFrame:
             "Order Item Quantity": [2],
             "Order Item Product Price": [40.0],
             "Sales": [80.0],
+            "Order Item Discount": [8.0],
             "Order Region": ["Southeast Asia"],
             "Order Status": ["COMPLETE"],
             "Delivery Status": ["Shipping on time"],
@@ -110,3 +111,10 @@ def test_dataco_currency_conversion_and_department_passthrough():
     assert row["sales_amount_aed"] == 80.0 * 3.6725
     assert row["source_department"] == "Fitness"
     assert row["emirate"] in {"Dubai", "Abu Dhabi", "Sharjah", "Ajman", "Ras Al Khaimah"}
+    assert row["discount_amount_aed"] == 8.0 * 3.6725
+
+
+def test_olist_has_no_discount_data():
+    fixtures = _olist_fixture()
+    olist_lines = olist_transform.build_sales_lines(**fixtures)
+    assert (olist_lines["discount_amount_aed"] == 0.0).all()
