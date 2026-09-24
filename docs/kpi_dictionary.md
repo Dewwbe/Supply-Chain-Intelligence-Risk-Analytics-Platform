@@ -56,7 +56,7 @@ around.
 
 | KPI | Formula | Grain | Owning table(s) | Inputs' label | Stakeholders | BI page |
 |---|---|---|---|---|---|---|
-| Supplier Risk Score (0–100) | Weighted, normalized composite: `w1*(1−OTD) + w2*norm(lead_time_std) + w3*defect_rate + w4*cost_variability + w5*cancellation_rate`; weights documented in `src/supplier_risk/scoring.py` | supplier | `fact_shipments`, `fact_purchase_orders` **(planned, Phase 3)**, `src/supplier_risk/scoring.py` | DERIVED from PUBLIC + SYNTHETIC | Procurement, COO | Supplier & Logistics |
+| Supplier Risk Score (0–100) | Weighted, normalized composite: `w1*(1−OTD) + w2*norm(avg_lead_time) + w3*norm(lead_time_std/avg_lead_time) + w4*defect_rate + w5*cost_variability + w6*cancellation_rate`; weights documented in `src/supplier_risk/scoring.py` (`DEFAULT_WEIGHTS`) | supplier | `fact_shipments`, `fact_purchase_orders`, `fact_returns`, `src/supplier_risk/scoring.py` | DERIVED from PUBLIC + SYNTHETIC | Procurement, COO | Supplier & Logistics |
 | Supplier Risk Level | `CASE score WHEN <25 THEN 'Low' WHEN <50 THEN 'Medium' WHEN <75 THEN 'High' ELSE 'Critical'` (thresholds documented, not implied) | supplier | same as above | DERIVED | Procurement, COO | Supplier & Logistics |
 
 ## 5. Forecast Accuracy (Phase 6 — model comparison, not a dashboard KPI)
