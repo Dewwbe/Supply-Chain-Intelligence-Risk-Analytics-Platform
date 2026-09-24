@@ -33,5 +33,9 @@ repos:
           - "structlog==24.4.0"
           - "redis==5.0.8"
           - "types-redis"
+          - "numpy==1.26.4"
+          - "pandas==2.2.2"
+          - "scipy==1.13.1"
+          - "sqlalchemy==2.0.32"
         args: ["--config-file=pyproject.toml"]
         files: ^src/

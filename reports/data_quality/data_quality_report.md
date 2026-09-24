@@ -2,4 +2,4 @@
 
 | dataset     |   rows |   columns |   missing_pct |   duplicate_rows |   critical_issues |   warning_issues | verdict   |
 |:------------|-------:|----------:|--------------:|-----------------:|------------------:|-----------------:|:----------|
-| sales_lines | 293169 |        22 |          8.76 |                0 |                 0 |             4866 | WARN      |
+| sales_lines | 293169 |        23 |          8.38 |                0 |                 0 |             4866 | WARN      |

@@ -46,6 +46,7 @@ SALES_LINE_COLUMNS = [
     "real_ship_days",
     "source_department",  # DataCo only — feeds dim_supplier/fact_shipments; None for Olist
     "customer_segment",  # DataCo only (real "Customer Segment" field); None for Olist
+    "discount_amount_aed",  # DataCo only (real "Order Item Discount" field); 0 for Olist
 ]
 
 
@@ -138,6 +139,7 @@ def finalize_sales_lines(df: pd.DataFrame) -> pd.DataFrame:
             "real_ship_days": None,
             "source_department": None,
             "customer_segment": None,
+            "discount_amount_aed": 0.0,
         }
     )
     return out[SALES_LINE_COLUMNS]
