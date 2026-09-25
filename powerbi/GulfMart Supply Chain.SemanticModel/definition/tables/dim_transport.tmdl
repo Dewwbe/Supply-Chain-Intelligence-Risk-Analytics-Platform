@@ -1,5 +1,5 @@
 table dim_transport
-	lineageTag: 484d1225-f438-4978-a62f-4707b7fdbf01
+	lineageTag: bd8e8780-c7c8-45d3-aee6-22446a6a7caf
 
 	column transport_key
 		dataType: int64
@@ -43,7 +43,8 @@ table dim_transport
 		mode: import
 		source =
 				let
-					Source = PostgreSQL.Database(PGServer, PGDatabase),
-					data = Value.NativeQuery(Source, "SELECT * FROM warehouse.dim_transport")
+					Source = Csv.Document(File.Contents(RepoRoot & "powerbi\data\dim_transport.csv"), [Delimiter=",", Columns=6, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"transport_key", Int64.Type}, {"transport_source_id", type text}, {"mode_name", type text}, {"carrier_name", type text}, {"vehicle_type", type text}, {"avg_cost_per_km", type number}})
 				in
-					data
+					Typed

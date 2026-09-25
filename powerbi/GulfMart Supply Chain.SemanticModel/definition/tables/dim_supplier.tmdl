@@ -1,5 +1,5 @@
 table dim_supplier
-	lineageTag: fbb93a66-5acf-4268-af3f-d229dc6a367f
+	lineageTag: 33373fc1-8242-4e05-8364-b45b02ad228d
 
 	column supplier_key
 		dataType: int64
@@ -43,7 +43,8 @@ table dim_supplier
 		mode: import
 		source =
 				let
-					Source = PostgreSQL.Database(PGServer, PGDatabase),
-					data = Value.NativeQuery(Source, "SELECT * FROM warehouse.dim_supplier")
+					Source = Csv.Document(File.Contents(RepoRoot & "powerbi\data\dim_supplier.csv"), [Delimiter=",", Columns=6, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"supplier_key", Int64.Type}, {"supplier_source_id", type text}, {"supplier_name", type text}, {"country", type text}, {"category", type text}, {"standard_lead_time_days", Int64.Type}})
 				in
-					data
+					Typed

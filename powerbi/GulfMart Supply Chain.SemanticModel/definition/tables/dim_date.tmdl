@@ -1,5 +1,5 @@
 table dim_date
-	lineageTag: 2c619d90-2b6d-4139-a82d-15f725f4506b
+	lineageTag: 6724fb2a-288c-4750-a8b3-e9befbf8a89a
 
 	column date_key
 		dataType: int64
@@ -65,7 +65,8 @@ table dim_date
 		mode: import
 		source =
 				let
-					Source = PostgreSQL.Database(PGServer, PGDatabase),
-					data = Value.NativeQuery(Source, "SELECT * FROM warehouse.dim_date")
+					Source = Csv.Document(File.Contents(RepoRoot & "powerbi\data\dim_date.csv"), [Delimiter=",", Columns=9, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"date_key", Int64.Type}, {"full_date", type date}, {"day_of_week", Int64.Type}, {"month", Int64.Type}, {"quarter", Int64.Type}, {"year", Int64.Type}, {"is_weekend", type logical}, {"is_uae_holiday", type logical}, {"season_label", type text}})
 				in
-					data
+					Typed

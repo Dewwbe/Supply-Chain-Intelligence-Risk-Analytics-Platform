@@ -1,5 +1,5 @@
 table fact_sales
-	lineageTag: 8ac43786-e894-45aa-b3f9-9b091e27b219
+	lineageTag: f3b03f31-a1cc-433d-9bc5-518a08a6cad8
 
 	column sales_key
 		dataType: int64
@@ -118,7 +118,8 @@ table fact_sales
 		mode: import
 		source =
 				let
-					Source = PostgreSQL.Database(PGServer, PGDatabase),
-					data = Value.NativeQuery(Source, "SELECT * FROM warehouse.fact_sales")
+					Source = Csv.Document(File.Contents(RepoRoot & "powerbi\data\fact_sales.csv"), [Delimiter=",", Columns=17, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"sales_key", Int64.Type}, {"source_system", type text}, {"order_id", type text}, {"order_line_item_id", type text}, {"date_key", Int64.Type}, {"product_key", Int64.Type}, {"customer_key", Int64.Type}, {"location_key", Int64.Type}, {"store_key", Int64.Type}, {"quantity", Int64.Type}, {"unit_price", type number}, {"discount", type number}, {"sales_amount", type number}, {"order_status", type text}, {"delivery_status", type text}, {"original_currency", type text}, {"original_sales_amount", type number}})
 				in
-					data
+					Typed

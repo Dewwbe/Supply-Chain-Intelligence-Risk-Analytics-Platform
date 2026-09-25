@@ -1,5 +1,5 @@
 table dim_store
-	lineageTag: dc32f270-f185-48ee-8b09-0a08c296532c
+	lineageTag: bc427381-a196-49da-8f7d-38a3471a0d66
 
 	column store_key
 		dataType: int64
@@ -37,7 +37,8 @@ table dim_store
 		mode: import
 		source =
 				let
-					Source = PostgreSQL.Database(PGServer, PGDatabase),
-					data = Value.NativeQuery(Source, "SELECT * FROM warehouse.dim_store")
+					Source = Csv.Document(File.Contents(RepoRoot & "powerbi\data\dim_store.csv"), [Delimiter=",", Columns=5, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"store_key", Int64.Type}, {"store_source_id", type text}, {"store_name", type text}, {"store_type", type text}, {"location_key", Int64.Type}})
 				in
-					data
+					Typed
