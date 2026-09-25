@@ -1,5 +1,5 @@
 table dim_product
-	lineageTag: 853b297d-2843-4817-9509-55fd225912ef
+	lineageTag: 859f5bbe-044a-4494-9071-00f06ba5d124
 
 	column product_key
 		dataType: int64
@@ -63,7 +63,8 @@ table dim_product
 		mode: import
 		source =
 				let
-					Source = PostgreSQL.Database(PGServer, PGDatabase),
-					data = Value.NativeQuery(Source, "SELECT * FROM warehouse.dim_product")
+					Source = Csv.Document(File.Contents(RepoRoot & "powerbi\data\dim_product.csv"), [Delimiter=",", Columns=9, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"product_key", Int64.Type}, {"product_source_id", type text}, {"product_name", type text}, {"category", type text}, {"subcategory", type text}, {"brand", type text}, {"unit_cost", type number}, {"unit_price", type number}, {"supplier_key", Int64.Type}})
 				in
-					data
+					Typed

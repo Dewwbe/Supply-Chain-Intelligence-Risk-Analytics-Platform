@@ -27,6 +27,7 @@ data/external/*
 powerbi/*.pbix
 reports/*.pdf
 excel/*.xlsx
+powerbi/data/
 
 # OS / IDE
 .DS_Store

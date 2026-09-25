@@ -1,5 +1,5 @@
 table fact_inventory
-	lineageTag: 1bce9196-2b38-4ad0-8422-8070eee001b8
+	lineageTag: ae13362a-db59-48a3-8d51-ac6a4d3bec02
 
 	column inventory_key
 		dataType: int64
@@ -61,7 +61,8 @@ table fact_inventory
 		mode: import
 		source =
 				let
-					Source = PostgreSQL.Database(PGServer, PGDatabase),
-					data = Value.NativeQuery(Source, "SELECT * FROM warehouse.fact_inventory")
+					Source = Csv.Document(File.Contents(RepoRoot & "powerbi\data\fact_inventory.csv"), [Delimiter=",", Columns=8, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"inventory_key", Int64.Type}, {"date_key", Int64.Type}, {"product_key", Int64.Type}, {"warehouse_key", Int64.Type}, {"opening_stock", Int64.Type}, {"received_quantity", Int64.Type}, {"sold_quantity", Int64.Type}, {"closing_stock", Int64.Type}})
 				in
-					data
+					Typed

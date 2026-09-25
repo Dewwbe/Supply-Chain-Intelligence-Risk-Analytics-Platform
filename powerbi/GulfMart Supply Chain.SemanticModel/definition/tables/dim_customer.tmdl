@@ -1,5 +1,5 @@
 table dim_customer
-	lineageTag: aec69989-5a7b-4b54-855c-00ef4566e189
+	lineageTag: 4586de62-ddca-424d-9255-b8f4b98e1782
 
 	column customer_key
 		dataType: int64
@@ -38,7 +38,8 @@ table dim_customer
 		mode: import
 		source =
 				let
-					Source = PostgreSQL.Database(PGServer, PGDatabase),
-					data = Value.NativeQuery(Source, "SELECT * FROM warehouse.dim_customer")
+					Source = Csv.Document(File.Contents(RepoRoot & "powerbi\data\dim_customer.csv"), [Delimiter=",", Columns=5, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"customer_key", Int64.Type}, {"customer_source_id", type text}, {"customer_segment", type text}, {"location_key", Int64.Type}, {"signup_date_key", Int64.Type}})
 				in
-					data
+					Typed

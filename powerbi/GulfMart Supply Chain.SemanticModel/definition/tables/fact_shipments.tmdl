@@ -1,5 +1,5 @@
 table fact_shipments
-	lineageTag: 5cbb0cc7-3ff4-42ac-9584-b18990416e78
+	lineageTag: 3a799b5f-4a23-486a-98d2-244b066063aa
 
 	column shipment_key
 		dataType: int64
@@ -93,7 +93,8 @@ table fact_shipments
 		mode: import
 		source =
 				let
-					Source = PostgreSQL.Database(PGServer, PGDatabase),
-					data = Value.NativeQuery(Source, "SELECT * FROM warehouse.fact_shipments")
+					Source = Csv.Document(File.Contents(RepoRoot & "powerbi\data\fact_shipments.csv"), [Delimiter=",", Columns=13, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"shipment_key", Int64.Type}, {"source_system", type text}, {"shipment_source_id", type text}, {"supplier_key", Int64.Type}, {"warehouse_key", Int64.Type}, {"product_key", Int64.Type}, {"transport_key", Int64.Type}, {"order_date_key", Int64.Type}, {"expected_delivery_date_key", Int64.Type}, {"actual_delivery_date_key", Int64.Type}, {"quantity", Int64.Type}, {"transport_mode", type text}, {"transport_cost", type number}})
 				in
-					data
+					Typed

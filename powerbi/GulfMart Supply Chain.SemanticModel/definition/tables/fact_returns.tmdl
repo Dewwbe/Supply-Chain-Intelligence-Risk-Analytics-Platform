@@ -1,5 +1,5 @@
 table fact_returns
-	lineageTag: 1224a4ba-6109-467e-9f7b-4894bb48803c
+	lineageTag: 611eb6e2-111a-43db-9f85-27c179a9c1c0
 
 	column return_key
 		dataType: int64
@@ -46,7 +46,8 @@ table fact_returns
 		mode: import
 		source =
 				let
-					Source = PostgreSQL.Database(PGServer, PGDatabase),
-					data = Value.NativeQuery(Source, "SELECT * FROM warehouse.fact_returns")
+					Source = Csv.Document(File.Contents(RepoRoot & "powerbi\data\fact_returns.csv"), [Delimiter=",", Columns=6, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"return_key", Int64.Type}, {"sales_key", Int64.Type}, {"return_date_key", Int64.Type}, {"reason", type text}, {"returned_quantity", Int64.Type}, {"refund_amount", type number}})
 				in
-					data
+					Typed

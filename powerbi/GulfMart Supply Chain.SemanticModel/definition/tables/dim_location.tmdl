@@ -1,5 +1,5 @@
 table dim_location
-	lineageTag: 35531290-b63f-4fa4-82a5-16e4b4f13d45
+	lineageTag: e83129cd-ac45-41c7-92ba-11a391bea0ec
 
 	column location_key
 		dataType: int64
@@ -30,7 +30,8 @@ table dim_location
 		mode: import
 		source =
 				let
-					Source = PostgreSQL.Database(PGServer, PGDatabase),
-					data = Value.NativeQuery(Source, "SELECT * FROM warehouse.dim_location")
+					Source = Csv.Document(File.Contents(RepoRoot & "powerbi\data\dim_location.csv"), [Delimiter=",", Columns=4, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"location_key", Int64.Type}, {"emirate", type text}, {"city", type text}, {"region_source", type text}})
 				in
-					data
+					Typed
