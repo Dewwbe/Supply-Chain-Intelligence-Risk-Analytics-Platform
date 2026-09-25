@@ -21,4 +21,3 @@ table 'Lead Time Change Parameter'
 			```
 
 	annotation __PBI_TemplateParameter = Lead Time Change %
-	// Bounds match lead_time_change_pct in src/api/routers/scenario.py.
