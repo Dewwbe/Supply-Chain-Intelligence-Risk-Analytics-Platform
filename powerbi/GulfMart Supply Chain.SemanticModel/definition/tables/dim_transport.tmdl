@@ -1,5 +1,5 @@
 table dim_transport
-	lineageTag: fbbdfc64-30e9-48c1-9c7f-05004efb0105
+	lineageTag: 484d1225-f438-4978-a62f-4707b7fdbf01
 
 	column transport_key
 		dataType: int64
@@ -44,6 +44,6 @@ table dim_transport
 		source =
 				let
 					Source = PostgreSQL.Database(PGServer, PGDatabase),
-					data = Source{[Schema="warehouse",Item="dim_transport"]}[Data]
+					data = Value.NativeQuery(Source, "SELECT * FROM warehouse.dim_transport")
 				in
 					data

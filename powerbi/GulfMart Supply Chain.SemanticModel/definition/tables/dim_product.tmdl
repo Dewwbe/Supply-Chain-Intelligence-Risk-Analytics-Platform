@@ -1,5 +1,5 @@
 table dim_product
-	lineageTag: 395e76df-c309-4f78-9377-ff3ce4caf409
+	lineageTag: 853b297d-2843-4817-9509-55fd225912ef
 
 	column product_key
 		dataType: int64
@@ -64,6 +64,6 @@ table dim_product
 		source =
 				let
 					Source = PostgreSQL.Database(PGServer, PGDatabase),
-					data = Source{[Schema="warehouse",Item="dim_product"]}[Data]
+					data = Value.NativeQuery(Source, "SELECT * FROM warehouse.dim_product")
 				in
 					data

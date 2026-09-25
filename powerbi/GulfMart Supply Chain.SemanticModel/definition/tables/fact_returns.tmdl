@@ -1,5 +1,5 @@
 table fact_returns
-	lineageTag: e5ecffce-edef-4f5d-aa89-79d5f0ad5923
+	lineageTag: 1224a4ba-6109-467e-9f7b-4894bb48803c
 
 	column return_key
 		dataType: int64
@@ -47,6 +47,6 @@ table fact_returns
 		source =
 				let
 					Source = PostgreSQL.Database(PGServer, PGDatabase),
-					data = Source{[Schema="warehouse",Item="fact_returns"]}[Data]
+					data = Value.NativeQuery(Source, "SELECT * FROM warehouse.fact_returns")
 				in
 					data
