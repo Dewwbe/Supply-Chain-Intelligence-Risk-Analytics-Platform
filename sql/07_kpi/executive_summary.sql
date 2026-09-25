@@ -1,19 +1,23 @@
 -- Business question: what are the current headline KPIs for the executive
 -- dashboard (revenue, margin, stockout rate, fill rate, supplier OTD)?
--- Consumed by: src/api/routers/kpis.py::_compute_kpi_summary (replace stub with this)
+-- Consumed by: src/api/routers/kpis.py::_compute_kpi_summary via
+-- src/kpi/summary.py (Phase 10) — kept here as the reference query this
+-- project's Python/DAX/Excel implementations all trace back to.
+--
+-- All-time totals, not filtered to "this year": the underlying data is a
+-- static historical extract (Olist/DataCo, 2015-2018), so
+-- `dd.year = EXTRACT(YEAR FROM CURRENT_DATE)` against today's real
+-- calendar year would silently match zero rows — a bug this file
+-- originally had, caught while building src/kpi/summary.py for Phase 10.
 
 WITH revenue AS (
     SELECT SUM(sales_amount) AS revenue_aed
     FROM warehouse.fact_sales fs
-    JOIN warehouse.dim_date dd ON dd.date_key = fs.date_key
-    WHERE dd.year = EXTRACT(YEAR FROM CURRENT_DATE)
 ),
 margin AS (
     SELECT SUM(fs.sales_amount - (dp.unit_cost * fs.quantity)) AS gross_margin_aed
     FROM warehouse.fact_sales fs
     JOIN warehouse.dim_product dp ON dp.product_key = fs.product_key
-    JOIN warehouse.dim_date dd ON dd.date_key = fs.date_key
-    WHERE dd.year = EXTRACT(YEAR FROM CURRENT_DATE)
 ),
 stockouts AS (
     SELECT

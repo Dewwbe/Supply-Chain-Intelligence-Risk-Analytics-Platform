@@ -1,0 +1,69 @@
+table dim_product
+	lineageTag: 395e76df-c309-4f78-9377-ff3ce4caf409
+
+	column product_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: product_key
+
+		annotation SummarizationSetBy = None
+
+	column product_source_id
+		dataType: string
+		sourceColumn: product_source_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_name
+		dataType: string
+		sourceColumn: product_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column category
+		dataType: string
+		sourceColumn: category
+
+		annotation SummarizationSetBy = Automatic
+
+	column subcategory
+		dataType: string
+		sourceColumn: subcategory
+
+		annotation SummarizationSetBy = Automatic
+
+	column brand
+		dataType: string
+		sourceColumn: brand
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit_cost
+		dataType: double
+		formatString: #,0.00
+		sourceColumn: unit_cost
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit_price
+		dataType: double
+		formatString: #,0.00
+		sourceColumn: unit_price
+
+		annotation SummarizationSetBy = Automatic
+
+	column supplier_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: supplier_key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_product = m
+		mode: import
+		source =
+				let
+					Source = PostgreSQL.Database(PGServer, PGDatabase),
+					data = Source{[Schema="warehouse",Item="dim_product"]}[Data]
+				in
+					data

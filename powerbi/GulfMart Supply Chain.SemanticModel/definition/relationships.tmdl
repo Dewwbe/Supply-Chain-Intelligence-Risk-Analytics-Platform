@@ -1,0 +1,130 @@
+// One row per FK in database/schema/01_warehouse_star_schema.sql and
+// 02_star_schema_extensions.sql. Where a fact table has more than one FK
+// into dim_date (fact_shipments, fact_purchase_orders each have 3), only
+// the order-date relationship is active — Power BI allows one active path
+// between two tables; the others are inactive, and
+// powerbi/dax_measures.dax's Average Lead Time measure resolves the
+// second role-playing date via LOOKUPVALUE instead of USERELATIONSHIP.
+
+relationship c1000001-0000-4000-8000-000000000001
+	fromColumn: fact_sales.date_key
+	toColumn: dim_date.date_key
+
+relationship c1000001-0000-4000-8000-000000000002
+	fromColumn: fact_sales.product_key
+	toColumn: dim_product.product_key
+
+relationship c1000001-0000-4000-8000-000000000003
+	fromColumn: fact_sales.customer_key
+	toColumn: dim_customer.customer_key
+
+relationship c1000001-0000-4000-8000-000000000004
+	fromColumn: fact_sales.location_key
+	toColumn: dim_location.location_key
+
+relationship c1000001-0000-4000-8000-000000000005
+	fromColumn: fact_sales.store_key
+	toColumn: dim_store.store_key
+
+relationship c1000001-0000-4000-8000-000000000006
+	fromColumn: fact_inventory.date_key
+	toColumn: dim_date.date_key
+
+relationship c1000001-0000-4000-8000-000000000007
+	fromColumn: fact_inventory.product_key
+	toColumn: dim_product.product_key
+
+relationship c1000001-0000-4000-8000-000000000008
+	fromColumn: fact_inventory.warehouse_key
+	toColumn: dim_warehouse.warehouse_key
+
+relationship c1000001-0000-4000-8000-000000000009
+	fromColumn: fact_shipments.supplier_key
+	toColumn: dim_supplier.supplier_key
+
+relationship c1000001-0000-4000-8000-00000000000a
+	fromColumn: fact_shipments.warehouse_key
+	toColumn: dim_warehouse.warehouse_key
+
+relationship c1000001-0000-4000-8000-00000000000b
+	fromColumn: fact_shipments.product_key
+	toColumn: dim_product.product_key
+
+relationship c1000001-0000-4000-8000-00000000000c
+	fromColumn: fact_shipments.transport_key
+	toColumn: dim_transport.transport_key
+
+relationship c1000001-0000-4000-8000-00000000000d
+	fromColumn: fact_shipments.order_date_key
+	toColumn: dim_date.date_key
+
+relationship c1000001-0000-4000-8000-00000000000e
+	isActive: false
+	fromColumn: fact_shipments.expected_delivery_date_key
+	toColumn: dim_date.date_key
+
+relationship c1000001-0000-4000-8000-00000000000f
+	isActive: false
+	fromColumn: fact_shipments.actual_delivery_date_key
+	toColumn: dim_date.date_key
+
+relationship c1000001-0000-4000-8000-000000000010
+	fromColumn: fact_purchase_orders.supplier_key
+	toColumn: dim_supplier.supplier_key
+
+relationship c1000001-0000-4000-8000-000000000011
+	fromColumn: fact_purchase_orders.warehouse_key
+	toColumn: dim_warehouse.warehouse_key
+
+relationship c1000001-0000-4000-8000-000000000012
+	fromColumn: fact_purchase_orders.product_key
+	toColumn: dim_product.product_key
+
+relationship c1000001-0000-4000-8000-000000000013
+	fromColumn: fact_purchase_orders.order_date_key
+	toColumn: dim_date.date_key
+
+relationship c1000001-0000-4000-8000-000000000014
+	isActive: false
+	fromColumn: fact_purchase_orders.expected_delivery_date_key
+	toColumn: dim_date.date_key
+
+relationship c1000001-0000-4000-8000-000000000015
+	isActive: false
+	fromColumn: fact_purchase_orders.actual_delivery_date_key
+	toColumn: dim_date.date_key
+
+relationship c1000001-0000-4000-8000-000000000016
+	fromCardinality: one
+	toCardinality: one
+	fromColumn: fact_returns.sales_key
+	toColumn: fact_sales.sales_key
+
+relationship c1000001-0000-4000-8000-000000000017
+	fromColumn: fact_returns.return_date_key
+	toColumn: dim_date.date_key
+
+relationship c1000001-0000-4000-8000-000000000018
+	fromColumn: dim_product.supplier_key
+	toColumn: dim_supplier.supplier_key
+
+relationship c1000001-0000-4000-8000-000000000019
+	fromColumn: dim_warehouse.location_key
+	toColumn: dim_location.location_key
+
+relationship c1000001-0000-4000-8000-00000000001a
+	fromColumn: dim_customer.location_key
+	toColumn: dim_location.location_key
+
+relationship c1000001-0000-4000-8000-00000000001b
+	fromColumn: dim_store.location_key
+	toColumn: dim_location.location_key
+
+// supplier_risk_scores.supplier_id is (confusingly) the supplier's NAME,
+// not a source id (see reports/supplier_risk/README.md /
+// src/supplier_risk/scoring.py) — joins on dim_supplier[supplier_name],
+// not a surrogate/source key, which is why this one relationship is
+// text-to-text rather than key-to-key like every other one here.
+relationship c1000001-0000-4000-8000-00000000001c
+	fromColumn: supplier_risk_scores.supplier_id
+	toColumn: dim_supplier.supplier_name

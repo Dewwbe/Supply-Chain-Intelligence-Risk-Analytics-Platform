@@ -1,0 +1,44 @@
+table dim_warehouse
+	lineageTag: 7fc284e4-7691-4edd-8e8f-c9f9c79ad78d
+
+	column warehouse_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: warehouse_key
+
+		annotation SummarizationSetBy = None
+
+	column warehouse_source_id
+		dataType: string
+		sourceColumn: warehouse_source_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column warehouse_name
+		dataType: string
+		sourceColumn: warehouse_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: location_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column capacity_units
+		dataType: int64
+		formatString: 0
+		sourceColumn: capacity_units
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_warehouse = m
+		mode: import
+		source =
+				let
+					Source = PostgreSQL.Database(PGServer, PGDatabase),
+					data = Source{[Schema="warehouse",Item="dim_warehouse"]}[Data]
+				in
+					data

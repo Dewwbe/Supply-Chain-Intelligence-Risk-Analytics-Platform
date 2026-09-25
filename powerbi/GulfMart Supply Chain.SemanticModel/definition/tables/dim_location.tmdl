@@ -1,0 +1,36 @@
+table dim_location
+	lineageTag: c2e391e3-8413-4598-9f6f-4bea062013d6
+
+	column location_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: location_key
+
+		annotation SummarizationSetBy = None
+
+	column emirate
+		dataType: string
+		sourceColumn: emirate
+
+		annotation SummarizationSetBy = Automatic
+
+	column city
+		dataType: string
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column region_source
+		dataType: string
+		sourceColumn: region_source
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_location = m
+		mode: import
+		source =
+				let
+					Source = PostgreSQL.Database(PGServer, PGDatabase),
+					data = Source{[Schema="warehouse",Item="dim_location"]}[Data]
+				in
+					data

@@ -1,0 +1,93 @@
+table fact_purchase_orders
+	lineageTag: 962ef4ca-04f5-484d-a9e0-dd2a592d7e9c
+
+	column po_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: po_key
+
+		annotation SummarizationSetBy = None
+
+	column po_source_id
+		dataType: string
+		sourceColumn: po_source_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column supplier_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: supplier_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column warehouse_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: warehouse_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: product_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_date_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: order_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column expected_delivery_date_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: expected_delivery_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column actual_delivery_date_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: actual_delivery_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_status
+		dataType: string
+		sourceColumn: order_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column quantity
+		dataType: int64
+		formatString: #,0
+		sourceColumn: quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit_cost
+		dataType: double
+		formatString: #,0.00
+		sourceColumn: unit_cost
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_cost
+		dataType: double
+		formatString: #,0.00
+		sourceColumn: total_cost
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_purchase_orders = m
+		mode: import
+		source =
+				let
+					Source = PostgreSQL.Database(PGServer, PGDatabase),
+					data = Source{[Schema="warehouse",Item="fact_purchase_orders"]}[Data]
+				in
+					data

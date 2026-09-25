@@ -1,0 +1,49 @@
+table dim_transport
+	lineageTag: fbbdfc64-30e9-48c1-9c7f-05004efb0105
+
+	column transport_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: transport_key
+
+		annotation SummarizationSetBy = None
+
+	column transport_source_id
+		dataType: string
+		sourceColumn: transport_source_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column mode_name
+		dataType: string
+		sourceColumn: mode_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column carrier_name
+		dataType: string
+		sourceColumn: carrier_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column vehicle_type
+		dataType: string
+		sourceColumn: vehicle_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column avg_cost_per_km
+		dataType: double
+		formatString: #,0.00
+		sourceColumn: avg_cost_per_km
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_transport = m
+		mode: import
+		source =
+				let
+					Source = PostgreSQL.Database(PGServer, PGDatabase),
+					data = Source{[Schema="warehouse",Item="dim_transport"]}[Data]
+				in
+					data

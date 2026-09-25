@@ -1,0 +1,124 @@
+table fact_sales
+	lineageTag: c8c73105-87d2-49b0-8748-1d764e365ee2
+
+	column sales_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: sales_key
+
+		annotation SummarizationSetBy = None
+
+	column source_system
+		dataType: string
+		sourceColumn: source_system
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_id
+		dataType: string
+		sourceColumn: order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_line_item_id
+		dataType: string
+		sourceColumn: order_line_item_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: product_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: location_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column store_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: store_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column quantity
+		dataType: int64
+		formatString: #,0
+		sourceColumn: quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit_price
+		dataType: double
+		formatString: #,0.00
+		sourceColumn: unit_price
+
+		annotation SummarizationSetBy = Automatic
+
+	column discount
+		dataType: double
+		formatString: #,0.00
+		sourceColumn: discount
+
+		annotation SummarizationSetBy = Automatic
+
+	column sales_amount
+		dataType: double
+		formatString: #,0.00
+		sourceColumn: sales_amount
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_status
+		dataType: string
+		sourceColumn: order_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column delivery_status
+		dataType: string
+		sourceColumn: delivery_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column original_currency
+		dataType: string
+		sourceColumn: original_currency
+
+		annotation SummarizationSetBy = Automatic
+
+	column original_sales_amount
+		dataType: double
+		formatString: #,0.00
+		sourceColumn: original_sales_amount
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_sales = m
+		mode: import
+		source =
+				let
+					Source = PostgreSQL.Database(PGServer, PGDatabase),
+					data = Source{[Schema="warehouse",Item="fact_sales"]}[Data]
+				in
+					data

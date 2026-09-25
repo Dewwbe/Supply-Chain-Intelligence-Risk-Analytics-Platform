@@ -1,0 +1,52 @@
+table fact_returns
+	lineageTag: e5ecffce-edef-4f5d-aa89-79d5f0ad5923
+
+	column return_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: return_key
+
+		annotation SummarizationSetBy = None
+
+	column sales_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: sales_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column return_date_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: return_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column reason
+		dataType: string
+		sourceColumn: reason
+
+		annotation SummarizationSetBy = Automatic
+
+	column returned_quantity
+		dataType: int64
+		formatString: #,0
+		sourceColumn: returned_quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column refund_amount
+		dataType: double
+		formatString: #,0.00
+		sourceColumn: refund_amount
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_returns = m
+		mode: import
+		source =
+				let
+					Source = PostgreSQL.Database(PGServer, PGDatabase),
+					data = Source{[Schema="warehouse",Item="fact_returns"]}[Data]
+				in
+					data

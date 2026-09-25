@@ -1,0 +1,99 @@
+table fact_shipments
+	lineageTag: 49082b3a-03a9-4bf1-8d4d-8695a790498c
+
+	column shipment_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: shipment_key
+
+		annotation SummarizationSetBy = None
+
+	column source_system
+		dataType: string
+		sourceColumn: source_system
+
+		annotation SummarizationSetBy = Automatic
+
+	column shipment_source_id
+		dataType: string
+		sourceColumn: shipment_source_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column supplier_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: supplier_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column warehouse_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: warehouse_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: product_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column transport_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: transport_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_date_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: order_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column expected_delivery_date_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: expected_delivery_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column actual_delivery_date_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: actual_delivery_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column quantity
+		dataType: int64
+		formatString: #,0
+		sourceColumn: quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column transport_mode
+		dataType: string
+		sourceColumn: transport_mode
+
+		annotation SummarizationSetBy = Automatic
+
+	column transport_cost
+		dataType: double
+		formatString: #,0.00
+		sourceColumn: transport_cost
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_shipments = m
+		mode: import
+		source =
+				let
+					Source = PostgreSQL.Database(PGServer, PGDatabase),
+					data = Source{[Schema="warehouse",Item="fact_shipments"]}[Data]
+				in
+					data
