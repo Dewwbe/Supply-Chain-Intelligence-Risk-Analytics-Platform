@@ -21,4 +21,3 @@ table 'Transport Cost Change Parameter'
 			```
 
 	annotation __PBI_TemplateParameter = Transport Cost Change %
-	// Bounds match transport_cost_change_pct in src/api/routers/scenario.py.

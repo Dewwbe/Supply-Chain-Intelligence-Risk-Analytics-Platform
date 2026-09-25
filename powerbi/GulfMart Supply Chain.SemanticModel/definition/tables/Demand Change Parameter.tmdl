@@ -21,7 +21,3 @@ table 'Demand Change Parameter'
 			```
 
 	annotation __PBI_TemplateParameter = Demand Change %
-	// Modeling > New Parameter > Numeric range in Desktop reproduces this
-	// exactly (Min -20, Max 30, Increment 1, per ScenarioRequest's
-	// demand_change_pct bounds in src/api/routers/scenario.py) — this is a
-	// best-effort hand-authored equivalent of that Desktop feature.

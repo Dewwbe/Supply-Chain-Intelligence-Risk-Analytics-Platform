@@ -1,11 +1,3 @@
-// One row per FK in database/schema/01_warehouse_star_schema.sql and
-// 02_star_schema_extensions.sql. Where a fact table has more than one FK
-// into dim_date (fact_shipments, fact_purchase_orders each have 3), only
-// the order-date relationship is active — Power BI allows one active path
-// between two tables; the others are inactive, and
-// powerbi/dax_measures.dax's Average Lead Time measure resolves the
-// second role-playing date via LOOKUPVALUE instead of USERELATIONSHIP.
-
 relationship c1000001-0000-4000-8000-000000000001
 	fromColumn: fact_sales.date_key
 	toColumn: dim_date.date_key
@@ -120,11 +112,6 @@ relationship c1000001-0000-4000-8000-00000000001b
 	fromColumn: dim_store.location_key
 	toColumn: dim_location.location_key
 
-// supplier_risk_scores.supplier_id is (confusingly) the supplier's NAME,
-// not a source id (see reports/supplier_risk/README.md /
-// src/supplier_risk/scoring.py) — joins on dim_supplier[supplier_name],
-// not a surrogate/source key, which is why this one relationship is
-// text-to-text rather than key-to-key like every other one here.
 relationship c1000001-0000-4000-8000-00000000001c
 	fromColumn: supplier_risk_scores.supplier_id
 	toColumn: dim_supplier.supplier_name
