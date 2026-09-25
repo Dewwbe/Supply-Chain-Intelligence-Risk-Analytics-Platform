@@ -48,3 +48,7 @@ black==24.8.0
 ruff==0.6.4
 mypy==1.11.2
 pre-commit==3.8.0
+
+# --- Phase 10: Excel workbook generation (Windows-only, drives real Excel
+# via COM to author native PivotTables — see excel/build_kpi_validation.py) ---
+pywin32==306; sys_platform == "win32"

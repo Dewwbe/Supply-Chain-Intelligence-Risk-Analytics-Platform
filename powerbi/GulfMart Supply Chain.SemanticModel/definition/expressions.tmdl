@@ -1,0 +1,14 @@
+expression PGServer = "localhost:5434" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: b2c3d4e5-0001-4000-8000-000000000001
+
+	annotation PBI_ResultType = Text
+
+expression PGDatabase = "gulfmart_analytics" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: b2c3d4e5-0002-4000-8000-000000000001
+
+	annotation PBI_ResultType = Text
+
+expression RepoRoot = "E:\Delliotte\Supply-Chain-Intelligence-Risk-Analytics-Platform\" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: b2c3d4e5-0003-4000-8000-000000000001
+
+	annotation PBI_ResultType = Text

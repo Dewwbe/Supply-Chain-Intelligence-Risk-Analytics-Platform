@@ -91,11 +91,31 @@ def load_baseline(window_days: int = BASELINE_WINDOW_DAYS) -> BaselineMetrics:
         params={"min_date": inventory_min, "max_date": inventory_max},
         parse_dates=["date"],
     )
-    inventory["value"] = inventory["closing_stock"] * inventory["unit_cost"]
-    # total portfolio value held *per day* (summed across products/warehouses),
-    # then averaged across the window — not the average of individual rows,
-    # which would understate the real total by orders of magnitude.
-    daily_inventory_value = inventory.groupby("date")["value"].sum()
+
+    # Inventory Value is a balance-sheet snapshot, not something to average
+    # over a shared window: Phase 3's simulator scopes each of the 502
+    # products to its own observed sales date range, so those histories end
+    # on scattered dates, not all together. Averaging daily totals *within*
+    # a shared recent window (the original approach here) still keeps
+    # thinning out day by day as more products' histories end before the
+    # window's close, understating the true current total by an order of
+    # magnitude. DISTINCT ON takes each product's own latest available row,
+    # regardless of window, and sums those — this is the same fix applied
+    # in src/kpi/summary.py's inventory_value_aed, found via that module's
+    # cross-check against this one during Phase 10.
+    inventory_snapshot = pd.read_sql_query(
+        """
+        SELECT DISTINCT ON (fi.product_key) fi.closing_stock, dp.unit_cost
+        FROM warehouse.fact_inventory fi
+        JOIN warehouse.dim_product dp ON dp.product_key = fi.product_key
+        JOIN warehouse.dim_date dd ON dd.date_key = fi.date_key
+        ORDER BY fi.product_key, dd.full_date DESC
+        """,
+        engine,
+    )
+    inventory_value = float(
+        (inventory_snapshot["closing_stock"] * inventory_snapshot["unit_cost"]).sum()
+    )
 
     shipments_min, shipments_max = _recent_window(
         engine,
@@ -130,7 +150,7 @@ def load_baseline(window_days: int = BASELINE_WINDOW_DAYS) -> BaselineMetrics:
         daily_demand_std_units=float(daily_demand["units"].std() or 0.0),
         avg_lead_time_days=float(lead_time["lead_time_days"].mean()),
         stockout_rate=float((inventory["closing_stock"] == 0).mean()),
-        inventory_value_aed=float(daily_inventory_value.mean()),
+        inventory_value_aed=inventory_value,
         transport_cost_aed=float(transport_cost.loc[0, "total_cost"] or 0.0),
         revenue_aed=float(daily_demand["revenue"].sum()),
     )

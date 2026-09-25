@@ -1,0 +1,71 @@
+table dim_date
+	lineageTag: d5264c26-11b1-48d2-b2df-d0a4af68f35b
+
+	column date_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = None
+
+	column full_date
+		dataType: dateTime
+		formatString: Long Date
+		sourceColumn: full_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_week
+		dataType: int64
+		formatString: 0
+		sourceColumn: day_of_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column month
+		dataType: int64
+		formatString: 0
+		sourceColumn: month
+
+		annotation SummarizationSetBy = Automatic
+
+	column quarter
+		dataType: int64
+		formatString: 0
+		sourceColumn: quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column year
+		dataType: int64
+		formatString: 0
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_weekend
+		dataType: boolean
+		sourceColumn: is_weekend
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_uae_holiday
+		dataType: boolean
+		sourceColumn: is_uae_holiday
+
+		annotation SummarizationSetBy = Automatic
+
+	column season_label
+		dataType: string
+		sourceColumn: season_label
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_date = m
+		mode: import
+		source =
+				let
+					Source = PostgreSQL.Database(PGServer, PGDatabase),
+					data = Source{[Schema="warehouse",Item="dim_date"]}[Data]
+				in
+					data

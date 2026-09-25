@@ -1,0 +1,44 @@
+table dim_customer
+	lineageTag: 1910caa2-b7ee-43df-904a-41cddebf695d
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = None
+
+	column customer_source_id
+		dataType: string
+		sourceColumn: customer_source_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_segment
+		dataType: string
+		sourceColumn: customer_segment
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: location_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column signup_date_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: signup_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_customer = m
+		mode: import
+		source =
+				let
+					Source = PostgreSQL.Database(PGServer, PGDatabase),
+					data = Source{[Schema="warehouse",Item="dim_customer"]}[Data]
+				in
+					data

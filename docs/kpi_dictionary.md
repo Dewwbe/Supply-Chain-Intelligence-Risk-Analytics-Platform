@@ -84,6 +84,22 @@ delays, transport costs, supplier lead times — see PRD Phase 8 for the
 full output schema (`anomaly_id`, `date`, `entity`, `metric`,
 `expected_value`, `actual_value`, `anomaly_score`, `severity`).
 
+## 7. Scenario Analysis (Phase 9 — What-If)
+
+| KPI | Formula | Grain | Owning table(s) | Inputs' label | Stakeholders | BI page |
+|---|---|---|---|---|---|---|
+| Revenue at Risk | `projected_revenue * stockout_rate`, where `projected_revenue = Total Revenue * (1 + demand_change_pct/100)` | scenario run | `src/scenario_model/engine.py` | DERIVED from PUBLIC + SYNTHETIC | COO, Finance | Scenario Simulator |
+
+Projected Inventory, Projected Transport Cost, Stockout Rate and Fill Rate
+on the Scenario Simulator page are **not new KPIs** — they are Inventory
+Value (§2), Transport Cost (§3), Stockout Rate (§2) and Fill Rate (§2)
+evaluated at a "what-if" grain (baseline × the 3 scenario parameters:
+demand change, lead-time change, transport-cost change) instead of the
+"actual" grain, per `src/scenario_model/engine.py`'s calibrated model. Only
+Revenue at Risk is genuinely new, since no "actual" equivalent exists
+elsewhere — it is introduced here, not left as an orphan measure in the
+Power BI/Excel scenario layer.
+
 ---
 
 ## Traceability check

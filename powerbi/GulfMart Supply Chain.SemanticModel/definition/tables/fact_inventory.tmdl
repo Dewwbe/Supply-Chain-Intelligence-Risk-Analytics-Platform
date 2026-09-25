@@ -1,0 +1,67 @@
+table fact_inventory
+	lineageTag: 67a24b03-af8e-4dbc-bde0-5bf26203f309
+
+	column inventory_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: inventory_key
+
+		annotation SummarizationSetBy = None
+
+	column date_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: product_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column warehouse_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: warehouse_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column opening_stock
+		dataType: int64
+		formatString: #,0
+		sourceColumn: opening_stock
+
+		annotation SummarizationSetBy = Automatic
+
+	column received_quantity
+		dataType: int64
+		formatString: #,0
+		sourceColumn: received_quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column sold_quantity
+		dataType: int64
+		formatString: #,0
+		sourceColumn: sold_quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column closing_stock
+		dataType: int64
+		formatString: #,0
+		sourceColumn: closing_stock
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_inventory = m
+		mode: import
+		source =
+				let
+					Source = PostgreSQL.Database(PGServer, PGDatabase),
+					data = Source{[Schema="warehouse",Item="fact_inventory"]}[Data]
+				in
+					data

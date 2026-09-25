@@ -1,0 +1,24 @@
+table 'Transport Cost Change Parameter'
+	lineageTag: a1b2c3d4-0004-4000-8000-000000000001
+	isHidden: false
+
+	column 'Transport Cost Change %'
+		dataType: int64
+		isHidden: false
+		lineageTag: a1b2c3d4-0004-4000-8000-000000000002
+		summarizeBy: none
+		sourceColumn: '[Transport Cost Change %]'
+
+		annotation SummarizationSetBy = Automatic
+
+	measure 'Transport Cost Change % Value' = SELECTEDVALUE('Transport Cost Change Parameter'[Transport Cost Change %], 0)
+		formatString: 0"%"
+
+	partition 'Transport Cost Change Parameter' = calculated
+		mode: import
+		source = ```
+				GENERATESERIES(-20, 40, 1)
+			```
+
+	annotation __PBI_TemplateParameter = Transport Cost Change %
+	// Bounds match transport_cost_change_pct in src/api/routers/scenario.py.
