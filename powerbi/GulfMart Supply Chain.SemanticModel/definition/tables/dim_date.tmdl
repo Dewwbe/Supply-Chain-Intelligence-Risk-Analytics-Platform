@@ -1,5 +1,5 @@
 table dim_date
-	lineageTag: d5264c26-11b1-48d2-b2df-d0a4af68f35b
+	lineageTag: 2c619d90-2b6d-4139-a82d-15f725f4506b
 
 	column date_key
 		dataType: int64
@@ -66,6 +66,6 @@ table dim_date
 		source =
 				let
 					Source = PostgreSQL.Database(PGServer, PGDatabase),
-					data = Source{[Schema="warehouse",Item="dim_date"]}[Data]
+					data = Value.NativeQuery(Source, "SELECT * FROM warehouse.dim_date")
 				in
 					data

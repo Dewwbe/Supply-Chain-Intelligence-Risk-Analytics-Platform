@@ -1,5 +1,5 @@
 table fact_purchase_orders
-	lineageTag: 962ef4ca-04f5-484d-a9e0-dd2a592d7e9c
+	lineageTag: 27741bca-489a-4be9-b0bb-d8215552a419
 
 	column po_key
 		dataType: int64
@@ -88,6 +88,6 @@ table fact_purchase_orders
 		source =
 				let
 					Source = PostgreSQL.Database(PGServer, PGDatabase),
-					data = Source{[Schema="warehouse",Item="fact_purchase_orders"]}[Data]
+					data = Value.NativeQuery(Source, "SELECT * FROM warehouse.fact_purchase_orders")
 				in
 					data

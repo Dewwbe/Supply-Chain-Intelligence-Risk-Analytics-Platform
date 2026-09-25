@@ -1,5 +1,5 @@
 table fact_sales
-	lineageTag: c8c73105-87d2-49b0-8748-1d764e365ee2
+	lineageTag: 8ac43786-e894-45aa-b3f9-9b091e27b219
 
 	column sales_key
 		dataType: int64
@@ -119,6 +119,6 @@ table fact_sales
 		source =
 				let
 					Source = PostgreSQL.Database(PGServer, PGDatabase),
-					data = Source{[Schema="warehouse",Item="fact_sales"]}[Data]
+					data = Value.NativeQuery(Source, "SELECT * FROM warehouse.fact_sales")
 				in
 					data
