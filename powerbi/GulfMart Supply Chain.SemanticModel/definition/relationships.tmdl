@@ -98,6 +98,7 @@ relationship c1000001-0000-4000-8000-000000000017
 	toColumn: dim_date.date_key
 
 relationship c1000001-0000-4000-8000-000000000018
+	isActive: false
 	fromColumn: dim_product.supplier_key
 	toColumn: dim_supplier.supplier_key
 
@@ -106,10 +107,12 @@ relationship c1000001-0000-4000-8000-000000000019
 	toColumn: dim_location.location_key
 
 relationship c1000001-0000-4000-8000-00000000001a
+	isActive: false
 	fromColumn: dim_customer.location_key
 	toColumn: dim_location.location_key
 
 relationship c1000001-0000-4000-8000-00000000001b
+	isActive: false
 	fromColumn: dim_store.location_key
 	toColumn: dim_location.location_key
 
