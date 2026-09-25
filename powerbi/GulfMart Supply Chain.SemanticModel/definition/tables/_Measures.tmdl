@@ -1,46 +1,46 @@
 table _Measures
-	lineageTag: 3ce183f5-9857-4f07-a300-709f20d0e4c5
+	lineageTag: 539b2a22-c748-4f83-b59a-fbe370ddf527
 	isHidden: false
 
 	measure 'Total Revenue' = SUM(fact_sales[sales_amount])
-		lineageTag: d5c34eea-6441-42d4-a4e7-c1b8024b93b8
+		lineageTag: 30dbb7d0-2578-46f5-aac9-ba36027f908b
 
 	measure 'Gross Margin' =
 		SUMX(
 		    fact_sales,
 		    fact_sales[sales_amount] - RELATED(dim_product[unit_cost]) * fact_sales[quantity]
 		)
-		lineageTag: 38eea034-8c40-4ec7-853a-c2574c6e2b59
+		lineageTag: 56c1f899-1114-477a-b781-a85ad50458b2
 
 	measure 'COGS' = SUMX(fact_sales, fact_sales[quantity] * RELATED(dim_product[unit_cost]))
-		lineageTag: e99ff8ad-adfb-4dd8-9e0e-06fe97beede2
+		lineageTag: 8d0a58f1-176f-4f5d-9ea3-a67a1f7d0922
 
 	measure 'Inventory Turnover' = DIVIDE([COGS], [Average Inventory Value])
-		lineageTag: 3471877c-02b6-44b7-88b3-a08f3eb87e60
+		lineageTag: 6df38ce6-0786-4878-92bc-c5a887606071
 
 	measure 'Total Revenue PY (DATEADD)' = CALCULATE([Total Revenue], DATEADD(dim_date[full_date], -1, YEAR))
-		lineageTag: d7343695-a86c-4ebc-8680-2c8f1e6faeb6
+		lineageTag: 1cc16a46-b4b1-45dc-b675-bac43398f15d
 
 	measure 'Total Revenue PY (SPLY)' = CALCULATE([Total Revenue], SAMEPERIODLASTYEAR(dim_date[full_date]))
-		lineageTag: d428c6c8-472a-4208-8feb-df4fc797f345
+		lineageTag: 1374cd17-9403-42fc-a952-5de20750aa76
 
 	measure 'Revenue YoY %' = DIVIDE([Total Revenue] - [Total Revenue PY (SPLY)], [Total Revenue PY (SPLY)])
-		lineageTag: db48fa88-0f5d-437f-9302-4c1e348373c8
+		lineageTag: c5891c65-a32d-4821-9f84-9bb11c0ae902
 
 	measure 'Revenue % of All Categories' = DIVIDE([Total Revenue], CALCULATE([Total Revenue], ALL(dim_product[category])))
-		lineageTag: 57671f90-53b0-4fab-8248-cf0f3adcf3cd
+		lineageTag: 1d638774-9547-45ac-9fb2-6ce07f27ec9d
 
 	measure 'Revenue % of Selected Categories' = DIVIDE([Total Revenue], CALCULATE([Total Revenue], ALLSELECTED(dim_product[category])))
-		lineageTag: a7bde6ad-ee73-4c04-ac16-2545d886f70f
+		lineageTag: 23938f41-c7c1-49c9-b4bd-972c40941eb5
 
 	measure 'Total Units Sold' = SUM(fact_sales[quantity])
-		lineageTag: 1cb060ff-ff8c-453b-8f16-55612097a299
+		lineageTag: 344a443a-0bf3-47fc-9605-408922b47824
 
 	measure 'Average Order Value' = DIVIDE([Total Revenue], DISTINCTCOUNT(fact_sales[order_id]))
-		lineageTag: 787595cb-fd17-49e7-9788-3ff1c427edef
+		lineageTag: 59986cdb-d4db-4f65-bc2c-86105aba856a
 
 	measure 'Return Rate' = DIVIDE(SUM(fact_returns[returned_quantity]), [Total Units Sold])
-		lineageTag: efd61eb7-7615-44fb-b953-9090c3107bac
+		lineageTag: f4a01b8b-7272-4b3c-afc9-e439789daa8c
 
 	measure 'Inventory Value' =
 		SUMX(
@@ -51,10 +51,10 @@ table _Measures
 		    ),
 		    fact_inventory[closing_stock] * RELATED(dim_product[unit_cost])
 		)
-		lineageTag: becc49de-5541-4c67-a519-22a428ce7d34
+		lineageTag: b31ab13e-1687-41b0-9af8-1e5b96e4c231
 
 	measure 'Stockout Rate' = DIVIDE(CALCULATE(COUNTROWS(fact_inventory), fact_inventory[closing_stock] = 0), COUNTROWS(fact_inventory))
-		lineageTag: 857c7e56-45d8-4671-ab83-e86434f647a2
+		lineageTag: 320fd7ee-dcf3-495c-ab83-9ac27dd298bb
 
 	measure 'Fill Rate' =
 		VAR SoldQty = SUM(fact_inventory[sold_quantity])
@@ -64,7 +64,7 @@ table _Measures
 		        MAX(0, fact_inventory[opening_stock] - fact_inventory[closing_stock] - fact_inventory[received_quantity])
 		    )
 		RETURN DIVIDE(SoldQty, SoldQty + UnmetQty)
-		lineageTag: f1f3408e-45b5-4673-b158-82ae7663ded3
+		lineageTag: 544eeab7-6d99-4735-866a-bfb08bd648fb
 
 	measure 'Average Inventory Value' =
 		AVERAGEX(
@@ -76,7 +76,7 @@ table _Measures
 		        )
 		    )
 		)
-		lineageTag: 214e1bb2-dc42-478c-8375-438fd7bb07a7
+		lineageTag: 7ba193bc-a32b-4807-9073-919e608da5cb
 
 	measure 'Average Lead Time' =
 		AVERAGEX(
@@ -84,7 +84,7 @@ table _Measures
 		    LOOKUPVALUE(dim_date[full_date], dim_date[date_key], fact_shipments[actual_delivery_date_key])
 		        - LOOKUPVALUE(dim_date[full_date], dim_date[date_key], fact_shipments[order_date_key])
 		)
-		lineageTag: 60d11523-6ddf-47e2-a71b-877f3ec3fa3c
+		lineageTag: 0f924d46-b6b5-4b84-946c-06e9dff5f1f0
 
 	measure 'Lead-Time Std Dev' =
 		AVERAGEX(
@@ -95,7 +95,7 @@ table _Measures
 		            - LOOKUPVALUE(dim_date[full_date], dim_date[date_key], fact_shipments[order_date_key])
 		    )
 		)
-		lineageTag: 877a380d-f3a3-4f6f-b5a5-1aeccaff510a
+		lineageTag: 5311f690-d05b-4986-a249-77486852bfe7
 
 	measure 'Supplier OTD' =
 		DIVIDE(
@@ -105,64 +105,73 @@ table _Measures
 		    ),
 		    CALCULATE(COUNTROWS(fact_shipments), NOT ISBLANK(fact_shipments[actual_delivery_date_key]))
 		)
-		lineageTag: ebd2c2d6-c0dc-430a-a636-93b0b9727daf
+		lineageTag: 6281cef2-1584-4057-9623-0a93a644cb43
 
 	measure 'Transport Cost' = SUM(fact_shipments[transport_cost])
-		lineageTag: de576c82-9e89-4a91-9bd6-524fdb14814d
+		lineageTag: 508acc46-d485-448d-a750-f69bca057294
 
 	measure 'Cancellation Rate' =
 		DIVIDE(
 		    CALCULATE(COUNTROWS(fact_purchase_orders), fact_purchase_orders[order_status] = "Cancelled"),
 		    COUNTROWS(fact_purchase_orders)
 		)
-		lineageTag: 089a10b6-f837-4a57-8cc0-84a5a7ace556
+		lineageTag: bc14697b-01ae-479a-a5a5-3d64040b86d5
 
 	measure 'Cost Variability' =
 		AVERAGEX(
 		    VALUES(dim_supplier[supplier_key]),
 		    DIVIDE(CALCULATE(STDEVX.P(fact_purchase_orders, fact_purchase_orders[unit_cost])), CALCULATE(AVERAGE(fact_purchase_orders[unit_cost])))
 		)
-		lineageTag: 45e851bb-aa0a-4875-b6ac-96a561156def
+		lineageTag: 499538ea-227c-4447-8486-5cc4d28d3bff
 
 	measure 'Supplier Risk Score' = AVERAGE(supplier_risk_scores[risk_score])
-		lineageTag: a819f883-842a-46e6-8f6b-c3712c16f2dd
+		lineageTag: 36d46e51-3b9a-4e54-b547-643ddb3a6ef6
 
 	measure 'Supplier Risk Level' = SELECTEDVALUE(supplier_risk_scores[risk_level])
-		lineageTag: a0eb53b1-78be-449f-a891-34a12504871f
+		lineageTag: 0ca0a025-c78e-4564-953f-34582d950010
 
 	measure 'Baseline Avg Daily Demand' = DIVIDE([Total Units Sold], DISTINCTCOUNT(fact_sales[date_key]))
-		lineageTag: 77c4fb3c-be3b-4f82-90d2-12d694e109d7
+		lineageTag: b9f50cfc-7deb-45c4-816c-2ed356357468
 
 	measure 'Baseline Daily Demand Std' =
 		STDEVX.P(
 		    ADDCOLUMNS(VALUES(dim_date[full_date]), "@DailyQty", CALCULATE(SUM(fact_sales[quantity]))),
 		    [@DailyQty]
 		)
-		lineageTag: 38195fb9-bee4-4053-a076-9a3b01c0ae18
+		lineageTag: e7baec2d-120c-4f62-8833-13015778a76a
 
 	measure 'Baseline Avg Lead Time' = [Average Lead Time]
-		lineageTag: eaaa88d2-d13e-4124-9642-cae5e8e4f932
+		lineageTag: 6a4c21b9-9e71-465f-9511-b29251c00274
 
 	measure 'Baseline Stockout Rate' = [Stockout Rate]
-		lineageTag: 9fbc0225-3f30-4627-ab25-a66bc5602d56
+		lineageTag: 4d24a864-3ba4-405a-b4fb-8c2720aff43e
 
 	measure 'Baseline Inventory Value' = [Inventory Value]
-		lineageTag: 9bcc5a3e-8257-40bb-afca-b5850e72b2e1
+		lineageTag: bb22cb62-9d15-4852-b7c7-cbaf00c935f0
 
 	measure 'Baseline Transport Cost' = [Transport Cost]
-		lineageTag: c8d52114-4a24-4f9a-bc42-cd44aeb9e851
+		lineageTag: 55a66ade-c3de-4da3-8af2-bced381e6b8b
 
 	measure 'Baseline Revenue' = [Total Revenue]
-		lineageTag: cf155c7e-9578-438b-ad02-3dfd818218ef
+		lineageTag: ac810eb9-a803-46a8-a613-c076b07415d5
+
+	measure 'Demand Change % Value' = SELECTEDVALUE('Demand Change Parameter'[Demand Change %], 0)
+		lineageTag: d3ec5b17-73c1-425b-a322-6cbd2a006e7b
+
+	measure 'Lead Time Change % Value' = SELECTEDVALUE('Lead Time Change Parameter'[Lead Time Change %], 0)
+		lineageTag: e879c934-0dc9-4b22-a885-38d28e8565ff
+
+	measure 'Transport Cost Change % Value' = SELECTEDVALUE('Transport Cost Change Parameter'[Transport Cost Change %], 0)
+		lineageTag: 02fdcdb6-d6aa-4b7d-8466-d7b192940b91
 
 	measure 'Scenario Demand Factor' = 1 + DIVIDE([Demand Change % Value], 100)
-		lineageTag: 96ce51c2-7619-4a42-adac-b81f6bd10f2a
+		lineageTag: 1e9bfa77-6bff-4d07-8fae-31132f57f718
 
 	measure 'Scenario Lead Time Factor' = 1 + DIVIDE([Lead Time Change % Value], 100)
-		lineageTag: 1ec0ef97-1e58-4848-93e8-5efa8987cb61
+		lineageTag: 5baf0851-afa3-452b-937e-2bbb947abdee
 
 	measure 'Scenario Cost Factor' = 1 + DIVIDE([Transport Cost Change % Value], 100)
-		lineageTag: 46ed9b79-4d22-4fe6-87da-0ba586565baa
+		lineageTag: ee89ec35-56f2-4ca4-9000-828f342ed3bb
 
 	measure 'Implied Safety Stock' =
 		VAR Mean = [Baseline Avg Daily Demand] * [Baseline Avg Lead Time]
@@ -192,7 +201,7 @@ table _Measures
 		        + 3.754408661907416) * QHigh + 1)
 		VAR Z = IF(P < PLow, ZLowTail, IF(P > PHigh, ZHighTail, ZMid))
 		RETURN Mean + Z * Std
-		lineageTag: 6210c83c-19e5-4354-a833-5da57b1b7000
+		lineageTag: f6763516-3e62-4b0a-ac6b-9d7d5f5522b3
 
 	measure 'Scenario Stockout Rate' =
 		VAR DemandFactor = [Scenario Demand Factor]
@@ -214,19 +223,19 @@ table _Measures
 		VAR Phi = IF(Z >= 0, 1 - UpperTail, UpperTail) // standard normal CDF at Z
 		VAR StockoutIfStdPositive = MIN(MAX(1 - Phi, 0), 1)
 		RETURN IF(ScenarioStd > 0, StockoutIfStdPositive, IF(SafetyStock >= ScenarioMean, 0, 1))
-		lineageTag: f7332401-8b9b-4ff0-ad3a-e350819ee176
+		lineageTag: 7b53e3c8-8a43-4469-9674-2958244478a3
 
 	measure 'Scenario Fill Rate' = 1 - [Scenario Stockout Rate]
-		lineageTag: d03c2600-9d31-4ab4-bfca-fedd9148a98c
+		lineageTag: 34f91cd7-0f90-403a-b625-894d88cad649
 
 	measure 'Scenario Projected Inventory Value' = [Baseline Inventory Value] * [Scenario Demand Factor] * [Scenario Lead Time Factor]
-		lineageTag: 940b134a-440a-4225-b885-f2179d0f25c7
+		lineageTag: 796a422b-1222-486b-abf4-2f8ac129c98a
 
 	measure 'Scenario Projected Transport Cost' = [Baseline Transport Cost] * [Scenario Demand Factor] * [Scenario Cost Factor]
-		lineageTag: 2091028e-9c6e-4d45-a87f-121b5b9416ed
+		lineageTag: 80abc6dc-2fcd-4c9f-8624-2807189bcfbd
 
 	measure 'Scenario Projected Revenue' = [Baseline Revenue] * [Scenario Demand Factor]
-		lineageTag: e8b7c589-ab1d-45f1-ad35-eafb71814df8
+		lineageTag: 65485150-4f26-4639-a433-e1554d3695a8
 
 	measure 'Revenue at Risk' = [Scenario Projected Revenue] * [Scenario Stockout Rate]
-		lineageTag: 7f4f2d9a-dfb1-4081-96ba-1991de4d44cc
+		lineageTag: e10dd39d-1673-4857-8683-e14e3f2a7856
