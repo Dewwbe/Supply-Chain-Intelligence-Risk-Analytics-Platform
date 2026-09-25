@@ -58,11 +58,24 @@ This page is the one place the report layer does real computation, not
 just aggregation — see `docs/kpi_dictionary.md` §7 and
 `src/scenario_model/engine.py` for the model this reproduces.
 
-1. **Add the 3 What-If parameters as slicers** — they already exist as
-   tables (`Demand Change Parameter`, `Lead Time Change Parameter`,
-   `Transport Cost Change Parameter`), each with a numeric-range slicer
-   field of the same name. Drop each one's column onto a Slicer visual
-   (single-value slider style).
+1. **Create the 3 What-If parameters, then add them as slicers.** Unlike
+   every other table in this model, these are NOT pre-built in the
+   TMDL — a hand-authored calculated GENERATESERIES table made Desktop
+   refuse to open the whole model ("composite model... entity based
+   query sources", see `powerbi/dax_measures.dax`'s comment above
+   `Scenario Demand Factor`), so create them here instead:
+   **Modeling > New Parameter > Numeric range**, once for each, with
+   these exact names/bounds (the measures already reference these exact
+   names, so nothing else needs changing once they exist):
+
+   | Parameter table name | Field name | Min | Max | Increment |
+   |---|---|---|---|---|
+   | Demand Change Parameter | Demand Change % | -20 | 30 | 1 |
+   | Lead Time Change Parameter | Lead Time Change % | -30 | 50 | 1 |
+   | Transport Cost Change Parameter | Transport Cost Change % | -20 | 40 | 1 |
+
+   Then drop each one's field onto a Slicer visual (single-value slider
+   style).
 2. **Baseline vs. scenario, side by side** — a table or a pair of card
    groups:
 

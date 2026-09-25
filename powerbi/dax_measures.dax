@@ -249,7 +249,26 @@ Baseline Transport Cost = [Transport Cost]
 
 Baseline Revenue = [Total Revenue]
 
-// Scenario (what-if) factors from the 3 slider parameters.
+// Scenario (what-if) factors from the 3 slider parameters. The parameter
+// tables themselves ('Demand Change Parameter' etc., each a single
+// GENERATESERIES column) are NOT included in this project's TMDL: adding
+// them as hand-authored calculated tables made Desktop refuse the whole
+// model with "A composite model cannot be used with entity based query
+// sources" (calculated tables alongside an imported Postgres connection),
+// and switching the Postgres M queries to Value.NativeQuery didn't change
+// that. Add these 3 as real What-If Parameters via Desktop's own UI
+// (Modeling > New Parameter > Numeric range) after the base model opens —
+// same names/bounds as below — and these measures resolve immediately,
+// no further edits needed:
+//   Demand Change Parameter:          Demand Change %,          -20 to 30,  step 1
+//   Lead Time Change Parameter:       Lead Time Change %,       -30 to 50,  step 1
+//   Transport Cost Change Parameter:  Transport Cost Change %,  -20 to 40,  step 1
+Demand Change % Value = SELECTEDVALUE('Demand Change Parameter'[Demand Change %], 0)
+
+Lead Time Change % Value = SELECTEDVALUE('Lead Time Change Parameter'[Lead Time Change %], 0)
+
+Transport Cost Change % Value = SELECTEDVALUE('Transport Cost Change Parameter'[Transport Cost Change %], 0)
+
 Scenario Demand Factor = 1 + DIVIDE([Demand Change % Value], 100)
 
 Scenario Lead Time Factor = 1 + DIVIDE([Lead Time Change % Value], 100)

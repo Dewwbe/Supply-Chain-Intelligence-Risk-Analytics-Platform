@@ -5,4 +5,4 @@ model Model
 
 	annotation __PBI_TimeIntelligenceEnabled = 1
 
-	annotation PBI_QueryOrder = ["dim_date","dim_location","dim_product","dim_supplier","dim_warehouse","dim_customer","dim_store","dim_transport","fact_sales","fact_inventory","fact_shipments","fact_purchase_orders","fact_returns","supplier_risk_scores","Demand Change Parameter","Lead Time Change Parameter","Transport Cost Change Parameter","_Measures"]
+	annotation PBI_QueryOrder = ["dim_date","dim_location","dim_product","dim_supplier","dim_warehouse","dim_customer","dim_store","dim_transport","fact_sales","fact_inventory","fact_shipments","fact_purchase_orders","fact_returns","supplier_risk_scores","_Measures"]
