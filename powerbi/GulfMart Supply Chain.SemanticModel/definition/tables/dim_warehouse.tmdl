@@ -4,18 +4,21 @@ table dim_warehouse
 	column warehouse_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 15c6fffd-7e11-4421-b02c-5ff777a04830
 		sourceColumn: warehouse_key
 
 		annotation SummarizationSetBy = None
 
 	column warehouse_source_id
 		dataType: string
+		lineageTag: 97ba6207-a338-424e-bc52-38b8c83c9e8f
 		sourceColumn: warehouse_source_id
 
 		annotation SummarizationSetBy = Automatic
 
 	column warehouse_name
 		dataType: string
+		lineageTag: 79f41db9-1878-42cf-b1fc-6057c40fbd97
 		sourceColumn: warehouse_name
 
 		annotation SummarizationSetBy = Automatic
@@ -23,6 +26,7 @@ table dim_warehouse
 	column location_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 283a2113-e9b6-4971-b173-43b54175ad53
 		sourceColumn: location_key
 
 		annotation SummarizationSetBy = Automatic
@@ -30,6 +34,7 @@ table dim_warehouse
 	column capacity_units
 		dataType: int64
 		formatString: 0
+		lineageTag: dff4d453-1ecc-4b3c-b51a-924a27f8abf6
 		sourceColumn: capacity_units
 
 		annotation SummarizationSetBy = Automatic

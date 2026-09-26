@@ -2,7 +2,31 @@ model Model
 	culture: en-US
 	defaultPowerBIDataSourceVersion: powerBI_V3
 	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
 
-	annotation __PBI_TimeIntelligenceEnabled = 1
+annotation __PBI_TimeIntelligenceEnabled = 1
 
-	annotation PBI_QueryOrder = ["dim_date","dim_location","dim_product","dim_supplier","dim_warehouse","dim_customer","dim_store","dim_transport","fact_sales","fact_inventory","fact_shipments","fact_purchase_orders","fact_returns","supplier_risk_scores","_Measures"]
+annotation PBI_QueryOrder = ["dim_date","dim_location","dim_product","dim_supplier","dim_warehouse","dim_customer","dim_store","dim_transport","fact_sales","fact_inventory","fact_shipments","fact_purchase_orders","fact_returns","supplier_risk_scores","_Measures","RepoRoot"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table dim_customer
+ref table dim_date
+ref table dim_location
+ref table dim_product
+ref table dim_store
+ref table dim_supplier
+ref table dim_transport
+ref table dim_warehouse
+ref table fact_inventory
+ref table fact_purchase_orders
+ref table fact_returns
+ref table fact_sales
+ref table fact_shipments
+ref table supplier_risk_scores
+ref table _Measures
+ref table 'Demand Change Parameter'
+ref table 'Lead Time Change Parameter'
+ref table 'Transport Cost Change Parameter'

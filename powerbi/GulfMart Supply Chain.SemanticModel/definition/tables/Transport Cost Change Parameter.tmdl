@@ -1,0 +1,25 @@
+table 'Transport Cost Change Parameter'
+	lineageTag: acb68260-da88-4115-940b-ac75a840b9f6
+
+	measure 'Transport Cost Change Parameter Value' = SELECTEDVALUE('Transport Cost Change Parameter'[Transport Cost Change Parameter], 0)
+		formatString: 0
+		lineageTag: 72a90e63-c74a-4e53-be63-1ce91c5a0839
+
+	column 'Transport Cost Change Parameter'
+		formatString: 0
+		lineageTag: 328f7ab4-325b-4a81-bdaf-b5ffde52a6f6
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
+
+		annotation SummarizationSetBy = User
+
+	partition 'Transport Cost Change Parameter' = calculated
+		mode: import
+		source = GENERATESERIES(-20, 40, 1)
+
+	annotation PBI_Id = f494e07014d94bddaf92a9c6bc0bd88f

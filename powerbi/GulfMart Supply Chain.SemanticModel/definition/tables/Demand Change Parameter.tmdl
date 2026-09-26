@@ -1,0 +1,25 @@
+table 'Demand Change Parameter'
+	lineageTag: 11b584a8-e0aa-471d-8138-c917e3afd0bd
+
+	measure 'Demand Change Parameter Value' = SELECTEDVALUE('Demand Change Parameter'[Demand Change Parameter], 0)
+		formatString: 0
+		lineageTag: bc8fc9b4-b39f-49fd-a746-1fc8ec9574c1
+
+	column 'Demand Change Parameter'
+		formatString: 0
+		lineageTag: eff04e6c-6c9c-438f-8d67-bab29f137dcd
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
+
+		annotation SummarizationSetBy = User
+
+	partition 'Demand Change Parameter' = calculated
+		mode: import
+		source = GENERATESERIES(-20, 30, 1)
+
+	annotation PBI_Id = e6b3adf7ed774b2dad7409aa87959127

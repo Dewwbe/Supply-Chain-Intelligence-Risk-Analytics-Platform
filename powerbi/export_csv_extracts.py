@@ -54,18 +54,40 @@ TABLES = [
     "fact_returns",
 ]
 
+# dim_date is the only table with boolean columns. \copy emits Postgres's
+# own boolean text ('t'/'f'), which Power Query's type-logical conversion
+# doesn't recognize (it expects TRUE/FALSE) -- every row failed that
+# conversion as a result. Cast to text explicitly instead of `SELECT *`.
+SELECTS = {
+    "dim_date": (
+        "SELECT date_key, full_date, day_of_week, month, quarter, year, "
+        "CASE WHEN is_weekend THEN 'TRUE' ELSE 'FALSE' END AS is_weekend, "
+        "CASE WHEN is_uae_holiday THEN 'TRUE' ELSE 'FALSE' END AS is_uae_holiday, "
+        "season_label "
+        "FROM warehouse.dim_date"
+    ),
+}
+
 
 def main() -> None:
     container = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_CONTAINER
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     for table in TABLES:
         out_path = OUT_DIR / f"{table}.csv"
-        query = f"\\copy (SELECT * FROM warehouse.{table}) TO STDOUT WITH CSV HEADER"
+        select = SELECTS.get(table, f"SELECT * FROM warehouse.{table}")
+        query = f"\\copy ({select}) TO STDOUT WITH CSV HEADER"
         with open(out_path, "wb") as f:
             subprocess.run(
                 [
                     "docker",
                     "exec",
+                    # PGOPTIONS forces ISO (YYYY-MM-DD) date output for
+                    # this session -- \copy otherwise emits dates in the
+                    # session's default locale format (observed as
+                    # DD/M/YYYY here), which Power Query's type-date
+                    # conversion misreads for any day-of-month above 12.
+                    "-e",
+                    "PGOPTIONS=-c datestyle=ISO,YMD",
                     container,
                     "psql",
                     "-U",

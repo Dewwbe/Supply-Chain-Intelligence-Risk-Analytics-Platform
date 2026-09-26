@@ -1,0 +1,25 @@
+table 'Lead Time Change Parameter'
+	lineageTag: ce88f93f-4d82-45d0-83a3-9e4402162508
+
+	measure 'Lead Time Change Parameter Value' = SELECTEDVALUE('Lead Time Change Parameter'[Lead Time Change Parameter], 0)
+		formatString: 0
+		lineageTag: 9d680ddd-86f7-4d6f-a7d3-999bd748fd36
+
+	column 'Lead Time Change Parameter'
+		formatString: 0
+		lineageTag: 779e7a75-8e3a-4ddd-a666-617053d41732
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
+
+		annotation SummarizationSetBy = User
+
+	partition 'Lead Time Change Parameter' = calculated
+		mode: import
+		source = GENERATESERIES(-30, 50, 1)
+
+	annotation PBI_Id = 7a51f8be55804ce6932ff8ad7f98faf8

@@ -4,30 +4,35 @@ table dim_supplier
 	column supplier_key
 		dataType: int64
 		formatString: 0
+		lineageTag: efabc33b-c13e-4cae-915f-dd022fd37021
 		sourceColumn: supplier_key
 
 		annotation SummarizationSetBy = None
 
 	column supplier_source_id
 		dataType: string
+		lineageTag: 01dbe747-b437-4bdf-905b-09a8ab65ef1e
 		sourceColumn: supplier_source_id
 
 		annotation SummarizationSetBy = Automatic
 
 	column supplier_name
 		dataType: string
+		lineageTag: e921b1c4-d74a-42c7-b256-366775f42b57
 		sourceColumn: supplier_name
 
 		annotation SummarizationSetBy = Automatic
 
 	column country
 		dataType: string
+		lineageTag: 057b1b03-db0d-44bd-9c6e-4cb3f6f119f3
 		sourceColumn: country
 
 		annotation SummarizationSetBy = Automatic
 
 	column category
 		dataType: string
+		lineageTag: 2c7bbb63-c543-42eb-99f3-b266f91e38b0
 		sourceColumn: category
 
 		annotation SummarizationSetBy = Automatic
@@ -35,6 +40,7 @@ table dim_supplier
 	column standard_lead_time_days
 		dataType: int64
 		formatString: 0
+		lineageTag: 690d67d1-bece-41dc-be20-71ff997e8ba7
 		sourceColumn: standard_lead_time_days
 
 		annotation SummarizationSetBy = Automatic

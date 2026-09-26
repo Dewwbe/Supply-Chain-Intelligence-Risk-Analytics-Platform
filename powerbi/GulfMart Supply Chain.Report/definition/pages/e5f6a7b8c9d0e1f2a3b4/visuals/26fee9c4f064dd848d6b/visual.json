@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "26fee9c4f064dd848d6b",
+  "position": {
+    "x": 420,
+    "y": 660,
+    "z": 10,
+    "height": 185,
+    "width": 730,
+    "tabOrder": 10
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Baseline Stockout Rate"
+                }
+              },
+              "queryRef": "_Measures.Baseline Stockout Rate",
+              "nativeQueryRef": "Baseline Stockout Rate"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

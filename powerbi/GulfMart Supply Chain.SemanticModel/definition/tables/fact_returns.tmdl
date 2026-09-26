@@ -4,6 +4,7 @@ table fact_returns
 	column return_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 57739820-0d91-4232-a908-bd83a97eb0cc
 		sourceColumn: return_key
 
 		annotation SummarizationSetBy = None
@@ -11,6 +12,7 @@ table fact_returns
 	column sales_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 5cdff11c-56c9-40f0-a022-209aaf577e68
 		sourceColumn: sales_key
 
 		annotation SummarizationSetBy = Automatic
@@ -18,12 +20,14 @@ table fact_returns
 	column return_date_key
 		dataType: int64
 		formatString: 0
+		lineageTag: f4c04251-74a0-4be0-bd1d-8c67a5be8131
 		sourceColumn: return_date_key
 
 		annotation SummarizationSetBy = Automatic
 
 	column reason
 		dataType: string
+		lineageTag: cd9d9132-f430-451a-8fab-2457d19d11b5
 		sourceColumn: reason
 
 		annotation SummarizationSetBy = Automatic
@@ -31,6 +35,7 @@ table fact_returns
 	column returned_quantity
 		dataType: int64
 		formatString: #,0
+		lineageTag: c7fc9767-3614-4a7e-9cb9-5c3609ff790a
 		sourceColumn: returned_quantity
 
 		annotation SummarizationSetBy = Automatic
@@ -38,6 +43,7 @@ table fact_returns
 	column refund_amount
 		dataType: double
 		formatString: #,0.00
+		lineageTag: 7b4ada79-88d4-4011-8d00-6e9ac198878c
 		sourceColumn: refund_amount
 
 		annotation SummarizationSetBy = Automatic
