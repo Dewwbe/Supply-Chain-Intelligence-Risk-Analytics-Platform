@@ -4,18 +4,21 @@ table dim_customer
 	column customer_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 102c699b-4025-402d-905a-2bd50451cc8b
 		sourceColumn: customer_key
 
 		annotation SummarizationSetBy = None
 
 	column customer_source_id
 		dataType: string
+		lineageTag: f5582cd3-4af6-4e3b-98fd-8014dec1ae79
 		sourceColumn: customer_source_id
 
 		annotation SummarizationSetBy = Automatic
 
 	column customer_segment
 		dataType: string
+		lineageTag: 4b6a943b-92e5-44ed-a248-653f2e8db415
 		sourceColumn: customer_segment
 
 		annotation SummarizationSetBy = Automatic
@@ -23,6 +26,7 @@ table dim_customer
 	column location_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 5659c2b9-4214-4e7b-85fe-be9f75d628b4
 		sourceColumn: location_key
 
 		annotation SummarizationSetBy = Automatic
@@ -30,6 +34,7 @@ table dim_customer
 	column signup_date_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 9d76a0df-62a7-4a84-a16f-284b4c30b10f
 		sourceColumn: signup_date_key
 
 		annotation SummarizationSetBy = Automatic

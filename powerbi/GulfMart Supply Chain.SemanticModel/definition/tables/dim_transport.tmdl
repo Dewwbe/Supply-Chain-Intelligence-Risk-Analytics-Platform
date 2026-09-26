@@ -4,30 +4,35 @@ table dim_transport
 	column transport_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 6df8c59a-aa70-48ca-b904-8761eb29841b
 		sourceColumn: transport_key
 
 		annotation SummarizationSetBy = None
 
 	column transport_source_id
 		dataType: string
+		lineageTag: a65819a5-3bd4-4da0-a6d2-04f0cc325345
 		sourceColumn: transport_source_id
 
 		annotation SummarizationSetBy = Automatic
 
 	column mode_name
 		dataType: string
+		lineageTag: 68719330-8aa9-4a9a-9679-a5b4935c12f7
 		sourceColumn: mode_name
 
 		annotation SummarizationSetBy = Automatic
 
 	column carrier_name
 		dataType: string
+		lineageTag: 5a4facc9-39ce-4369-956f-88353844a264
 		sourceColumn: carrier_name
 
 		annotation SummarizationSetBy = Automatic
 
 	column vehicle_type
 		dataType: string
+		lineageTag: 392ec1aa-240c-4077-831e-0a85d3d5556a
 		sourceColumn: vehicle_type
 
 		annotation SummarizationSetBy = Automatic
@@ -35,6 +40,7 @@ table dim_transport
 	column avg_cost_per_km
 		dataType: double
 		formatString: #,0.00
+		lineageTag: aa7ceed4-4e4c-4f11-a296-dc56945a5d01
 		sourceColumn: avg_cost_per_km
 
 		annotation SummarizationSetBy = Automatic

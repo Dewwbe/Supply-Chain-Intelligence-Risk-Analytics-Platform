@@ -4,24 +4,28 @@ table dim_store
 	column store_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 3ca8bcf2-f2aa-400e-bea3-23e605708964
 		sourceColumn: store_key
 
 		annotation SummarizationSetBy = None
 
 	column store_source_id
 		dataType: string
+		lineageTag: b76b3bce-6909-45e3-a822-a7898fd10732
 		sourceColumn: store_source_id
 
 		annotation SummarizationSetBy = Automatic
 
 	column store_name
 		dataType: string
+		lineageTag: ec7702f8-8c5a-44ab-9d28-4a6fdfbfcd86
 		sourceColumn: store_name
 
 		annotation SummarizationSetBy = Automatic
 
 	column store_type
 		dataType: string
+		lineageTag: 02d6fee3-e609-43e8-9c92-b3ca8d580d33
 		sourceColumn: store_type
 
 		annotation SummarizationSetBy = Automatic
@@ -29,6 +33,7 @@ table dim_store
 	column location_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 094a516b-5070-49cd-aac8-838c29096e36
 		sourceColumn: location_key
 
 		annotation SummarizationSetBy = Automatic

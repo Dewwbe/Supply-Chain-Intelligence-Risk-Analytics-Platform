@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "8930b556d1723cf68cf7",
+  "position": {
+    "x": 1170,
+    "y": 455,
+    "z": 9,
+    "height": 185,
+    "width": 730,
+    "tabOrder": 9
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Scenario Projected Transport Cost"
+                }
+              },
+              "queryRef": "_Measures.Scenario Projected Transport Cost",
+              "nativeQueryRef": "Scenario Projected Transport Cost"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

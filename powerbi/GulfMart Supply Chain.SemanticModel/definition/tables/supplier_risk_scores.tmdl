@@ -3,6 +3,7 @@ table supplier_risk_scores
 
 	column supplier_id
 		dataType: string
+		lineageTag: 3653163a-a601-40f8-9124-ab62735843a0
 		sourceColumn: supplier_id
 
 		annotation SummarizationSetBy = Automatic
@@ -10,12 +11,14 @@ table supplier_risk_scores
 	column risk_score
 		dataType: double
 		formatString: #,0.0
+		lineageTag: fc5f5b9b-2a10-4498-85a1-5d57da951cee
 		sourceColumn: risk_score
 
 		annotation SummarizationSetBy = Automatic
 
 	column risk_level
 		dataType: string
+		lineageTag: 9dcee535-6977-4bfe-9994-3615ca280146
 		sourceColumn: risk_level
 
 		annotation SummarizationSetBy = Automatic

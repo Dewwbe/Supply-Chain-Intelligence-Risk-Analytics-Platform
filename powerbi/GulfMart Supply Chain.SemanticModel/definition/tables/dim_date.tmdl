@@ -1,23 +1,31 @@
 table dim_date
 	lineageTag: 6724fb2a-288c-4750-a8b3-e9befbf8a89a
+	dataCategory: Time
 
 	column date_key
 		dataType: int64
 		formatString: 0
+		lineageTag: ab7fb20c-30b7-4c12-b701-d96a9dc6dd85
 		sourceColumn: date_key
 
 		annotation SummarizationSetBy = None
 
 	column full_date
 		dataType: dateTime
+		isKey
 		formatString: Long Date
+		lineageTag: 9f02f5fe-7b6f-478b-a873-adb7318469f9
+		summarizeBy: none
 		sourceColumn: full_date
 
 		annotation SummarizationSetBy = Automatic
 
+		annotation UnderlyingDateTimeDataType = Date
+
 	column day_of_week
 		dataType: int64
 		formatString: 0
+		lineageTag: 89d7453c-4e4f-402b-b758-9374eeaaa0ab
 		sourceColumn: day_of_week
 
 		annotation SummarizationSetBy = Automatic
@@ -25,6 +33,7 @@ table dim_date
 	column month
 		dataType: int64
 		formatString: 0
+		lineageTag: 31c54ea9-134b-47aa-929b-a79adc467d2f
 		sourceColumn: month
 
 		annotation SummarizationSetBy = Automatic
@@ -32,6 +41,7 @@ table dim_date
 	column quarter
 		dataType: int64
 		formatString: 0
+		lineageTag: 33d1cf48-b786-4b40-9ed1-52062d2f9c73
 		sourceColumn: quarter
 
 		annotation SummarizationSetBy = Automatic
@@ -39,24 +49,28 @@ table dim_date
 	column year
 		dataType: int64
 		formatString: 0
+		lineageTag: 0c40124c-c8a8-4a85-9895-da5f8fbed39b
 		sourceColumn: year
 
 		annotation SummarizationSetBy = Automatic
 
 	column is_weekend
 		dataType: boolean
+		lineageTag: a5c7094a-4e5a-48db-8d7e-b984406312b5
 		sourceColumn: is_weekend
 
 		annotation SummarizationSetBy = Automatic
 
 	column is_uae_holiday
 		dataType: boolean
+		lineageTag: 7ad463e5-b887-40ca-b3c7-92cedb79d99c
 		sourceColumn: is_uae_holiday
 
 		annotation SummarizationSetBy = Automatic
 
 	column season_label
 		dataType: string
+		lineageTag: 65163278-e706-45bb-9776-8915fe4513fc
 		sourceColumn: season_label
 
 		annotation SummarizationSetBy = Automatic

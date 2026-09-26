@@ -34,6 +34,9 @@ xgboost==2.1.1
 matplotlib==3.9.2
 seaborn==0.13.2
 
+# --- executive report (Phase 11: Markdown -> HTML -> PDF) ---
+Markdown==3.11
+
 # --- big data / orchestration (introduced deliberately — see README §6) ---
 pyspark==3.5.2
 apache-airflow==2.10.1
