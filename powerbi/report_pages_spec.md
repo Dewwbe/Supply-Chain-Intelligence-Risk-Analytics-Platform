@@ -1,18 +1,10 @@
 # Report Pages — Build Spec
 
-The 5 pages already exist as empty canvases in `GulfMart Supply Chain.Report`
-(correctly named and ordered) once you open the project in Desktop — this
-spec is what to place on each one. Every visual references a real measure
-from `_Measures` (see `powerbi/dax_measures.dax`); nothing here needs a new
-measure invented on the fly. Each page takes roughly 5-10 minutes to build.
-
-Why a spec instead of pre-built visuals: Power BI Desktop isn't installed
-in the environment this project was built in, so the report's visual JSON
-couldn't be authored and then opened/validated the way the semantic
-model's DAX was (see `tests/unit/test_dax_scenario_formulas.py` and
-`test_dax_normal_approximations.py` for how *that* was verified). Handing
-you unverified visual JSON that might simply fail to open on first launch
-would cost you more time than this spec does.
+What each of the 5 pages in `GulfMart Supply Chain.Report` shows.
+`powerbi/build_report_visuals.py` generates exactly these visuals, so the
+report opens fully built; this spec is the reference for what's there and
+why. Every visual references a real measure from `_Measures` (see
+`powerbi/dax_measures.dax`).
 
 ## 1. Executive Overview
 
@@ -41,7 +33,7 @@ would cost you more time than this spec does.
 |---|---|
 | Card | `Inventory Value`, `Stockout Rate`, `Fill Rate`, `Inventory Turnover` |
 | Table | Rows: `dim_product[product_name]`, `dim_warehouse[warehouse_name]`. Values: `Inventory Value`, `Stockout Rate`, `Fill Rate` |
-| Bar chart | Axis: `dim_warehouse[warehouse_name]`. Values: `Stockout Rate` — conditional formatting: red above the network average (use `Stockout Rate` as the reference line) |
+| Bar chart | Axis: `dim_warehouse[warehouse_name]`. Values: `Stockout Rate` — optional manual step, not generated: conditional formatting red above the network average (Format > Bars > Colors > fx) |
 
 ## 4. Supplier & Logistics
 
@@ -58,24 +50,19 @@ This page is the one place the report layer does real computation, not
 just aggregation — see `docs/kpi_dictionary.md` §7 and
 `src/scenario_model/engine.py` for the model this reproduces.
 
-1. **Create the 3 What-If parameters, then add them as slicers.** Unlike
-   every other table in this model, these are NOT pre-built in the
-   TMDL — a hand-authored calculated GENERATESERIES table made Desktop
-   refuse to open the whole model ("composite model... entity based
-   query sources", see `powerbi/dax_measures.dax`'s comment above
-   `Scenario Demand Factor`), so create them here instead:
-   **Modeling > New Parameter > Numeric range**, once for each, with
-   these exact names/bounds (the measures already reference these exact
-   names, so nothing else needs changing once they exist):
+1. **The 3 What-If parameters, as single-value slider slicers.** Each is
+   a disconnected `GENERATESERIES` table (created with Desktop's
+   **Modeling > New Parameter > Numeric range**); its column has the same
+   name as its table:
 
-   | Parameter table name | Field name | Min | Max | Increment |
-   |---|---|---|---|---|
-   | Demand Change Parameter | Demand Change % | -20 | 30 | 1 |
-   | Lead Time Change Parameter | Lead Time Change % | -30 | 50 | 1 |
-   | Transport Cost Change Parameter | Transport Cost Change % | -20 | 40 | 1 |
+   | Parameter table / column | Min | Max | Increment |
+   |---|---|---|---|
+   | Demand Change Parameter | -20 | 30 | 1 |
+   | Lead Time Change Parameter | -30 | 50 | 1 |
+   | Transport Cost Change Parameter | -20 | 40 | 1 |
 
-   Then drop each one's field onto a Slicer visual (single-value slider
-   style).
+   The slicers must stay single-value: the `... Change % Value` measures
+   use `SELECTEDVALUE`, which falls back to 0 when a range is selected.
 2. **Baseline vs. scenario, side by side** — a table or a pair of card
    groups:
 

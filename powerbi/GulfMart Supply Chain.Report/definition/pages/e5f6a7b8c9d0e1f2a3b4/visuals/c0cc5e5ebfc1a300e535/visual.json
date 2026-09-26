@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "c0cc5e5ebfc1a300e535",
+  "position": {
+    "x": 420,
+    "y": 455,
+    "z": 8,
+    "height": 185,
+    "width": 730,
+    "tabOrder": 8
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Baseline Transport Cost"
+                }
+              },
+              "queryRef": "_Measures.Baseline Transport Cost",
+              "nativeQueryRef": "Baseline Transport Cost"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
