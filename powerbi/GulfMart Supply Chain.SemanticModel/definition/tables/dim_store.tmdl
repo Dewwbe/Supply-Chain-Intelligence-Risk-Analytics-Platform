@@ -1,0 +1,44 @@
+table dim_store
+	lineageTag: bc427381-a196-49da-8f7d-38a3471a0d66
+
+	column store_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: store_key
+
+		annotation SummarizationSetBy = None
+
+	column store_source_id
+		dataType: string
+		sourceColumn: store_source_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column store_name
+		dataType: string
+		sourceColumn: store_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column store_type
+		dataType: string
+		sourceColumn: store_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: location_key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_store = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(RepoRoot & "powerbi\data\dim_store.csv"), [Delimiter=",", Columns=5, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"store_key", Int64.Type}, {"store_source_id", type text}, {"store_name", type text}, {"store_type", type text}, {"location_key", Int64.Type}})
+				in
+					Typed

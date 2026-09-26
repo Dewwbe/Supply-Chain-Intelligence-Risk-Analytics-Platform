@@ -1,0 +1,68 @@
+table fact_inventory
+	lineageTag: ae13362a-db59-48a3-8d51-ac6a4d3bec02
+
+	column inventory_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: inventory_key
+
+		annotation SummarizationSetBy = None
+
+	column date_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: product_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column warehouse_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: warehouse_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column opening_stock
+		dataType: int64
+		formatString: #,0
+		sourceColumn: opening_stock
+
+		annotation SummarizationSetBy = Automatic
+
+	column received_quantity
+		dataType: int64
+		formatString: #,0
+		sourceColumn: received_quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column sold_quantity
+		dataType: int64
+		formatString: #,0
+		sourceColumn: sold_quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column closing_stock
+		dataType: int64
+		formatString: #,0
+		sourceColumn: closing_stock
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_inventory = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(RepoRoot & "powerbi\data\fact_inventory.csv"), [Delimiter=",", Columns=8, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"inventory_key", Int64.Type}, {"date_key", Int64.Type}, {"product_key", Int64.Type}, {"warehouse_key", Int64.Type}, {"opening_stock", Int64.Type}, {"received_quantity", Int64.Type}, {"sold_quantity", Int64.Type}, {"closing_stock", Int64.Type}})
+				in
+					Typed

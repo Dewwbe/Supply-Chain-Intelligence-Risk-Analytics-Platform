@@ -30,6 +30,10 @@ statsmodels==0.14.2
 scikit-learn==1.5.1
 xgboost==2.1.1
 
+# --- visualization (Phase 4 EDA notebooks) ---
+matplotlib==3.9.2
+seaborn==0.13.2
+
 # --- big data / orchestration (introduced deliberately — see README §6) ---
 pyspark==3.5.2
 apache-airflow==2.10.1
@@ -44,3 +48,7 @@ black==24.8.0
 ruff==0.6.4
 mypy==1.11.2
 pre-commit==3.8.0
+
+# --- Phase 10: Excel workbook generation (Windows-only, drives real Excel
+# via COM to author native PivotTables — see excel/build_kpi_validation.py) ---
+pywin32==306; sys_platform == "win32"

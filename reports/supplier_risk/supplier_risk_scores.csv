@@ -1,0 +1,12 @@
+supplier_id,risk_score,risk_level
+Book Shop Supplier,54.490193587964896,High
+Fitness Supplier,52.92961518748736,High
+Pet Shop Supplier,48.2784604998044,Medium
+Outdoors Supplier,47.40886250233196,Medium
+Technology Supplier,42.90958310087179,Medium
+Fan Shop Supplier,42.627360334155355,Medium
+Apparel Supplier,37.80039213598368,Medium
+Golf Supplier,36.07259180378434,Medium
+Footwear Supplier,31.84827033596229,Medium
+Discs Shop Supplier,30.160198410515193,Medium
+Health and Beauty  Supplier,14.86217342234234,Low

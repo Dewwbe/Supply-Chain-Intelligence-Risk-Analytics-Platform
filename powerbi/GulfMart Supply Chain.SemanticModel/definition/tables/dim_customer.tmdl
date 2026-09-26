@@ -1,0 +1,45 @@
+table dim_customer
+	lineageTag: 4586de62-ddca-424d-9255-b8f4b98e1782
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = None
+
+	column customer_source_id
+		dataType: string
+		sourceColumn: customer_source_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_segment
+		dataType: string
+		sourceColumn: customer_segment
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: location_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column signup_date_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: signup_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_customer = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(RepoRoot & "powerbi\data\dim_customer.csv"), [Delimiter=",", Columns=5, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"customer_key", Int64.Type}, {"customer_source_id", type text}, {"customer_segment", type text}, {"location_key", Int64.Type}, {"signup_date_key", Int64.Type}})
+				in
+					Typed

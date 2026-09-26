@@ -56,7 +56,7 @@ around.
 
 | KPI | Formula | Grain | Owning table(s) | Inputs' label | Stakeholders | BI page |
 |---|---|---|---|---|---|---|
-| Supplier Risk Score (0–100) | Weighted, normalized composite: `w1*(1−OTD) + w2*norm(lead_time_std) + w3*defect_rate + w4*cost_variability + w5*cancellation_rate`; weights documented in `src/supplier_risk/scoring.py` | supplier | `fact_shipments`, `fact_purchase_orders` **(planned, Phase 3)**, `src/supplier_risk/scoring.py` | DERIVED from PUBLIC + SYNTHETIC | Procurement, COO | Supplier & Logistics |
+| Supplier Risk Score (0–100) | Weighted, normalized composite: `w1*(1−OTD) + w2*norm(avg_lead_time) + w3*norm(lead_time_std/avg_lead_time) + w4*defect_rate + w5*cost_variability + w6*cancellation_rate`; weights documented in `src/supplier_risk/scoring.py` (`DEFAULT_WEIGHTS`) | supplier | `fact_shipments`, `fact_purchase_orders`, `fact_returns`, `src/supplier_risk/scoring.py` | DERIVED from PUBLIC + SYNTHETIC | Procurement, COO | Supplier & Logistics |
 | Supplier Risk Level | `CASE score WHEN <25 THEN 'Low' WHEN <50 THEN 'Medium' WHEN <75 THEN 'High' ELSE 'Critical'` (thresholds documented, not implied) | supplier | same as above | DERIVED | Procurement, COO | Supplier & Logistics |
 
 ## 5. Forecast Accuracy (Phase 6 — model comparison, not a dashboard KPI)
@@ -83,6 +83,22 @@ Anomalies are computed over: daily sales, inventory changes, shipment
 delays, transport costs, supplier lead times — see PRD Phase 8 for the
 full output schema (`anomaly_id`, `date`, `entity`, `metric`,
 `expected_value`, `actual_value`, `anomaly_score`, `severity`).
+
+## 7. Scenario Analysis (Phase 9 — What-If)
+
+| KPI | Formula | Grain | Owning table(s) | Inputs' label | Stakeholders | BI page |
+|---|---|---|---|---|---|---|
+| Revenue at Risk | `projected_revenue * stockout_rate`, where `projected_revenue = Total Revenue * (1 + demand_change_pct/100)` | scenario run | `src/scenario_model/engine.py` | DERIVED from PUBLIC + SYNTHETIC | COO, Finance | Scenario Simulator |
+
+Projected Inventory, Projected Transport Cost, Stockout Rate and Fill Rate
+on the Scenario Simulator page are **not new KPIs** — they are Inventory
+Value (§2), Transport Cost (§3), Stockout Rate (§2) and Fill Rate (§2)
+evaluated at a "what-if" grain (baseline × the 3 scenario parameters:
+demand change, lead-time change, transport-cost change) instead of the
+"actual" grain, per `src/scenario_model/engine.py`'s calibrated model. Only
+Revenue at Risk is genuinely new, since no "actual" equivalent exists
+elsewhere — it is introduced here, not left as an orphan measure in the
+Power BI/Excel scenario layer.
 
 ---
 

@@ -1,0 +1,31 @@
+table supplier_risk_scores
+	lineageTag: a1b2c3d4-0001-4000-8000-000000000001
+
+	column supplier_id
+		dataType: string
+		sourceColumn: supplier_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column risk_score
+		dataType: double
+		formatString: #,0.0
+		sourceColumn: risk_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column risk_level
+		dataType: string
+		sourceColumn: risk_level
+
+		annotation SummarizationSetBy = Automatic
+
+	partition supplier_risk_scores = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(RepoRoot & "reports\supplier_risk\supplier_risk_scores.csv"), [Delimiter=",", Columns=3, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"supplier_id", type text}, {"risk_score", type number}, {"risk_level", type text}})
+				in
+					Typed

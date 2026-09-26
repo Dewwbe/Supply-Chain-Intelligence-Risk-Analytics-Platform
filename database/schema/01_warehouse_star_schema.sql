@@ -18,16 +18,16 @@ CREATE TABLE IF NOT EXISTS warehouse.dim_date (
 
 CREATE TABLE IF NOT EXISTS warehouse.dim_location (
     location_key    BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    emirate         TEXT NOT NULL,           -- Dubai, Abu Dhabi, Sharjah, Ajman, RAK, Fujairah, UAQ
+    emirate         TEXT NOT NULL REFERENCES reference.ref_emirate(emirate_name),
     city            TEXT,
-    region_source   TEXT                     -- raw source value, pre master-data standardization
+    region_source   TEXT UNIQUE              -- raw source value, pre master-data standardization
 );
 
 CREATE TABLE IF NOT EXISTS warehouse.dim_product (
     product_key     BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    product_source_id TEXT NOT NULL,
+    product_source_id TEXT NOT NULL UNIQUE,
     product_name    TEXT NOT NULL,
-    category        TEXT NOT NULL,           -- standardized via master data rules
+    category        TEXT NOT NULL REFERENCES reference.ref_product_category(category_name),
     subcategory     TEXT,
     brand           TEXT,
     unit_cost       NUMERIC(12, 2),
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS warehouse.dim_product (
 
 CREATE TABLE IF NOT EXISTS warehouse.dim_supplier (
     supplier_key    BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    supplier_source_id TEXT NOT NULL,
+    supplier_source_id TEXT NOT NULL UNIQUE,
     supplier_name   TEXT NOT NULL,
     country         TEXT,
     category        TEXT,
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS warehouse.dim_supplier (
 
 CREATE TABLE IF NOT EXISTS warehouse.dim_warehouse (
     warehouse_key   BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    warehouse_source_id TEXT NOT NULL,
+    warehouse_source_id TEXT NOT NULL UNIQUE,
     warehouse_name  TEXT NOT NULL,
     location_key    BIGINT REFERENCES warehouse.dim_location(location_key),
     capacity_units  INT
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS warehouse.dim_warehouse (
 
 CREATE TABLE IF NOT EXISTS warehouse.dim_customer (
     customer_key    BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    customer_source_id TEXT NOT NULL,
+    customer_source_id TEXT NOT NULL UNIQUE,
     customer_segment TEXT,
     location_key    BIGINT REFERENCES warehouse.dim_location(location_key),
     signup_date_key INT REFERENCES warehouse.dim_date(date_key)
@@ -62,7 +62,9 @@ CREATE TABLE IF NOT EXISTS warehouse.dim_customer (
 
 CREATE TABLE IF NOT EXISTS warehouse.fact_sales (
     sales_key       BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    source_system   TEXT NOT NULL,           -- olist | dataco
     order_id        TEXT NOT NULL,
+    order_line_item_id TEXT NOT NULL,        -- source line-item id; unique with order_id+source_system
     date_key        INT NOT NULL REFERENCES warehouse.dim_date(date_key),
     product_key     BIGINT NOT NULL REFERENCES warehouse.dim_product(product_key),
     customer_key    BIGINT REFERENCES warehouse.dim_customer(customer_key),
@@ -70,7 +72,12 @@ CREATE TABLE IF NOT EXISTS warehouse.fact_sales (
     quantity        INT NOT NULL CHECK (quantity > 0),
     unit_price      NUMERIC(12, 2) NOT NULL CHECK (unit_price >= 0),
     discount        NUMERIC(12, 2) DEFAULT 0 CHECK (discount >= 0),
-    sales_amount    NUMERIC(14, 2) NOT NULL CHECK (sales_amount >= 0)
+    sales_amount    NUMERIC(14, 2) NOT NULL CHECK (sales_amount >= 0),
+    order_status    TEXT REFERENCES reference.ref_order_status(status_name),
+    delivery_status TEXT REFERENCES reference.ref_delivery_status(status_name),
+    original_currency TEXT REFERENCES reference.ref_currency(currency_code),
+    original_sales_amount NUMERIC(14, 2),    -- sales_amount before AED conversion, same currency as original_currency
+    UNIQUE (source_system, order_id, order_line_item_id)
 );
 
 CREATE TABLE IF NOT EXISTS warehouse.fact_inventory (
@@ -86,6 +93,7 @@ CREATE TABLE IF NOT EXISTS warehouse.fact_inventory (
 
 CREATE TABLE IF NOT EXISTS warehouse.fact_shipments (
     shipment_key    BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    source_system   TEXT NOT NULL,           -- dataco only, currently (see etl/README.md)
     shipment_source_id TEXT NOT NULL,
     supplier_key    BIGINT NOT NULL REFERENCES warehouse.dim_supplier(supplier_key),
     warehouse_key   BIGINT NOT NULL REFERENCES warehouse.dim_warehouse(warehouse_key),
@@ -94,8 +102,9 @@ CREATE TABLE IF NOT EXISTS warehouse.fact_shipments (
     expected_delivery_date_key INT REFERENCES warehouse.dim_date(date_key),
     actual_delivery_date_key   INT REFERENCES warehouse.dim_date(date_key),
     quantity        INT NOT NULL CHECK (quantity > 0),
-    transport_mode  TEXT,
-    transport_cost  NUMERIC(12, 2) CHECK (transport_cost >= 0),
+    transport_mode  TEXT REFERENCES reference.ref_shipping_mode(mode_name),
+    transport_cost  NUMERIC(12, 2) CHECK (transport_cost >= 0),  -- NULL: no cost column in DataCo, not fabricated
+    UNIQUE (source_system, shipment_source_id),
     CHECK (
         actual_delivery_date_key IS NULL
         OR expected_delivery_date_key IS NULL

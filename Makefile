@@ -15,6 +15,9 @@ migrate:
 	for f in database/schema/*.sql; do \
 		psql "$$DATABASE_URL" -f $$f; \
 	done
+	for f in database/seed/*.sql; do \
+		psql "$$DATABASE_URL" -f $$f; \
+	done
 
 download-data:
 	python -m etl.extract.download_raw --all

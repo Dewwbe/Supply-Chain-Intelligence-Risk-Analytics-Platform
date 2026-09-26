@@ -1,0 +1,50 @@
+table dim_supplier
+	lineageTag: 33373fc1-8242-4e05-8364-b45b02ad228d
+
+	column supplier_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: supplier_key
+
+		annotation SummarizationSetBy = None
+
+	column supplier_source_id
+		dataType: string
+		sourceColumn: supplier_source_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column supplier_name
+		dataType: string
+		sourceColumn: supplier_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column country
+		dataType: string
+		sourceColumn: country
+
+		annotation SummarizationSetBy = Automatic
+
+	column category
+		dataType: string
+		sourceColumn: category
+
+		annotation SummarizationSetBy = Automatic
+
+	column standard_lead_time_days
+		dataType: int64
+		formatString: 0
+		sourceColumn: standard_lead_time_days
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_supplier = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(RepoRoot & "powerbi\data\dim_supplier.csv"), [Delimiter=",", Columns=6, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"supplier_key", Int64.Type}, {"supplier_source_id", type text}, {"supplier_name", type text}, {"country", type text}, {"category", type text}, {"standard_lead_time_days", Int64.Type}})
+				in
+					Typed

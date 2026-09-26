@@ -1,0 +1,45 @@
+table dim_warehouse
+	lineageTag: f8ba6ddc-1467-48eb-a8c0-49190a0d1fb8
+
+	column warehouse_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: warehouse_key
+
+		annotation SummarizationSetBy = None
+
+	column warehouse_source_id
+		dataType: string
+		sourceColumn: warehouse_source_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column warehouse_name
+		dataType: string
+		sourceColumn: warehouse_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: location_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column capacity_units
+		dataType: int64
+		formatString: 0
+		sourceColumn: capacity_units
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_warehouse = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(RepoRoot & "powerbi\data\dim_warehouse.csv"), [Delimiter=",", Columns=5, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"warehouse_key", Int64.Type}, {"warehouse_source_id", type text}, {"warehouse_name", type text}, {"location_key", Int64.Type}, {"capacity_units", Int64.Type}})
+				in
+					Typed

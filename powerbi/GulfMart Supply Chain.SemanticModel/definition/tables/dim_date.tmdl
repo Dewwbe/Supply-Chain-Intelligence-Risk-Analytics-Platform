@@ -1,0 +1,72 @@
+table dim_date
+	lineageTag: 6724fb2a-288c-4750-a8b3-e9befbf8a89a
+
+	column date_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = None
+
+	column full_date
+		dataType: dateTime
+		formatString: Long Date
+		sourceColumn: full_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_week
+		dataType: int64
+		formatString: 0
+		sourceColumn: day_of_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column month
+		dataType: int64
+		formatString: 0
+		sourceColumn: month
+
+		annotation SummarizationSetBy = Automatic
+
+	column quarter
+		dataType: int64
+		formatString: 0
+		sourceColumn: quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column year
+		dataType: int64
+		formatString: 0
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_weekend
+		dataType: boolean
+		sourceColumn: is_weekend
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_uae_holiday
+		dataType: boolean
+		sourceColumn: is_uae_holiday
+
+		annotation SummarizationSetBy = Automatic
+
+	column season_label
+		dataType: string
+		sourceColumn: season_label
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_date = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(RepoRoot & "powerbi\data\dim_date.csv"), [Delimiter=",", Columns=9, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"date_key", Int64.Type}, {"full_date", type date}, {"day_of_week", Int64.Type}, {"month", Int64.Type}, {"quarter", Int64.Type}, {"year", Int64.Type}, {"is_weekend", type logical}, {"is_uae_holiday", type logical}, {"season_label", type text}})
+				in
+					Typed

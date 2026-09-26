@@ -1,0 +1,50 @@
+table dim_transport
+	lineageTag: bd8e8780-c7c8-45d3-aee6-22446a6a7caf
+
+	column transport_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: transport_key
+
+		annotation SummarizationSetBy = None
+
+	column transport_source_id
+		dataType: string
+		sourceColumn: transport_source_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column mode_name
+		dataType: string
+		sourceColumn: mode_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column carrier_name
+		dataType: string
+		sourceColumn: carrier_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column vehicle_type
+		dataType: string
+		sourceColumn: vehicle_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column avg_cost_per_km
+		dataType: double
+		formatString: #,0.00
+		sourceColumn: avg_cost_per_km
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_transport = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(RepoRoot & "powerbi\data\dim_transport.csv"), [Delimiter=",", Columns=6, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"transport_key", Int64.Type}, {"transport_source_id", type text}, {"mode_name", type text}, {"carrier_name", type text}, {"vehicle_type", type text}, {"avg_cost_per_km", type number}})
+				in
+					Typed

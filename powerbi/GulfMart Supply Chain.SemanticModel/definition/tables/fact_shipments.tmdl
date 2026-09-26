@@ -1,0 +1,100 @@
+table fact_shipments
+	lineageTag: 3a799b5f-4a23-486a-98d2-244b066063aa
+
+	column shipment_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: shipment_key
+
+		annotation SummarizationSetBy = None
+
+	column source_system
+		dataType: string
+		sourceColumn: source_system
+
+		annotation SummarizationSetBy = Automatic
+
+	column shipment_source_id
+		dataType: string
+		sourceColumn: shipment_source_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column supplier_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: supplier_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column warehouse_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: warehouse_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: product_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column transport_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: transport_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_date_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: order_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column expected_delivery_date_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: expected_delivery_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column actual_delivery_date_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: actual_delivery_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column quantity
+		dataType: int64
+		formatString: #,0
+		sourceColumn: quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column transport_mode
+		dataType: string
+		sourceColumn: transport_mode
+
+		annotation SummarizationSetBy = Automatic
+
+	column transport_cost
+		dataType: double
+		formatString: #,0.00
+		sourceColumn: transport_cost
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_shipments = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(RepoRoot & "powerbi\data\fact_shipments.csv"), [Delimiter=",", Columns=13, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"shipment_key", Int64.Type}, {"source_system", type text}, {"shipment_source_id", type text}, {"supplier_key", Int64.Type}, {"warehouse_key", Int64.Type}, {"product_key", Int64.Type}, {"transport_key", Int64.Type}, {"order_date_key", Int64.Type}, {"expected_delivery_date_key", Int64.Type}, {"actual_delivery_date_key", Int64.Type}, {"quantity", Int64.Type}, {"transport_mode", type text}, {"transport_cost", type number}})
+				in
+					Typed

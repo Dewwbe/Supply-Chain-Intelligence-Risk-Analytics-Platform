@@ -22,10 +22,20 @@ class ScenarioRequest(BaseModel):
 
 
 class ScenarioResult(BaseModel):
+    """Baseline vs. scenario, side by side — every `baseline_*` field is the
+    real current warehouse figure (src/scenario_model/data.py); every other
+    field is what the model projects under the requested change.
+    """
+
+    baseline_inventory_aed: float
     projected_inventory_aed: float
+    baseline_transport_cost_aed: float
     projected_transport_cost_aed: float
+    baseline_stockout_rate: float
     stockout_rate: float
+    baseline_fill_rate: float
     fill_rate: float
+    baseline_revenue_at_risk_aed: float
     revenue_at_risk_aed: float
 
 
@@ -34,8 +44,10 @@ class ScenarioResult(BaseModel):
 def simulate(request: Request, payload: ScenarioRequest) -> ScenarioResult:
     """Run the baseline-vs-scenario calculation.
 
-    In the finished project this calls src/scenario_model, which loads the
-    baseline from the warehouse and applies the requested deltas.
+    Loads the real baseline from the warehouse (src/scenario_model/data.py)
+    and applies the requested deltas through the statistical model in
+    src/scenario_model/engine.py — every number returned is produced by
+    that model, never hardcoded here.
     """
     from src.scenario_model.engine import run_scenario
 

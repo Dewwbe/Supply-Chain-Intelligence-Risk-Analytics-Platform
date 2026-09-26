@@ -1,0 +1,53 @@
+table fact_returns
+	lineageTag: 611eb6e2-111a-43db-9f85-27c179a9c1c0
+
+	column return_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: return_key
+
+		annotation SummarizationSetBy = None
+
+	column sales_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: sales_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column return_date_key
+		dataType: int64
+		formatString: 0
+		sourceColumn: return_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column reason
+		dataType: string
+		sourceColumn: reason
+
+		annotation SummarizationSetBy = Automatic
+
+	column returned_quantity
+		dataType: int64
+		formatString: #,0
+		sourceColumn: returned_quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column refund_amount
+		dataType: double
+		formatString: #,0.00
+		sourceColumn: refund_amount
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_returns = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(RepoRoot & "powerbi\data\fact_returns.csv"), [Delimiter=",", Columns=6, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"return_key", Int64.Type}, {"sales_key", Int64.Type}, {"return_date_key", Int64.Type}, {"reason", type text}, {"returned_quantity", Int64.Type}, {"refund_amount", type number}})
+				in
+					Typed
