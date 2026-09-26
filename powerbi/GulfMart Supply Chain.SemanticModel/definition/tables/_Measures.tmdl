@@ -70,13 +70,17 @@ table _Measures
 		lineageTag: 320fd7ee-dcf3-495c-ab83-9ac27dd298bb
 
 	measure 'Fill Rate' =
-			VAR SoldQty = SUM(fact_inventory[sold_quantity])
-			VAR UnmetQty =
-			    SUMX(
-			        fact_inventory,
-			        MAX(0, fact_inventory[opening_stock] - fact_inventory[closing_stock] - fact_inventory[received_quantity])
+			VAR FulfilledQty = SUM(fact_inventory[sold_quantity])
+			VAR DemandQty =
+			    CALCULATE(
+			        SUM(fact_sales[quantity]),
+			        TREATAS(
+			            SUMMARIZE(fact_inventory, fact_inventory[product_key], fact_inventory[date_key]),
+			            fact_sales[product_key],
+			            fact_sales[date_key]
+			        )
 			    )
-			RETURN DIVIDE(SoldQty, SoldQty + UnmetQty)
+			RETURN DIVIDE(FulfilledQty, DemandQty)
 		formatString: 0.0%
 		lineageTag: 15841b98-9b5e-4e0e-90c3-5f1630aae2ca
 

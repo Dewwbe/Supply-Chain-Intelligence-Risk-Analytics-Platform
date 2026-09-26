@@ -1,0 +1,5 @@
+,MAE,RMSE,MAPE,WAPE,interval_coverage,avg_interval_width
+XGBoost,53.77,96.19,279.34,22.41,0.47,43.2
+Seasonal Naive,55.2,89.76,252.18,22.65,0.77,102.63
+ETS,55.7,95.48,267.02,22.81,0.58,59.99
+SARIMA,55.89,92.09,266.3,23.54,0.64,92.52

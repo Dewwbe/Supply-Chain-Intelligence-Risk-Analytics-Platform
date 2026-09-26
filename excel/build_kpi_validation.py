@@ -51,11 +51,17 @@ def load_inventory() -> pd.DataFrame:
     df = pd.read_sql_query(
         """
         SELECT dd.full_date, fi.product_key, dw.warehouse_name, fi.opening_stock,
-               fi.received_quantity, fi.sold_quantity, fi.closing_stock, dp.unit_cost
+               fi.received_quantity, fi.sold_quantity, fi.closing_stock, dp.unit_cost,
+               COALESCE(demand.demand_quantity, 0) AS demand_quantity
         FROM warehouse.fact_inventory fi
         JOIN warehouse.dim_product dp ON dp.product_key = fi.product_key
         JOIN warehouse.dim_warehouse dw ON dw.warehouse_key = fi.warehouse_key
         JOIN warehouse.dim_date dd ON dd.date_key = fi.date_key
+        LEFT JOIN (
+            SELECT product_key, date_key, SUM(quantity) AS demand_quantity
+            FROM warehouse.fact_sales
+            GROUP BY product_key, date_key
+        ) demand ON demand.product_key = fi.product_key AND demand.date_key = fi.date_key
         ORDER BY fi.product_key, dd.full_date
         """,
         get_engine(),
@@ -146,17 +152,20 @@ def main() -> None:
     inv_sheet = wb.Sheets.Add(After=wb.Sheets(wb.Sheets.Count))
     inv_sheet.Name = "Inventory Data"
     inv_last_row = write_dataframe(inv_sheet, inventory)
+    # Column I (demand_quantity) is the real fact_sales quantity for that
+    # product and day, pre-joined in SQL: a per-row SUMIFS against ~293k
+    # sales rows would be ~180k x 293k comparisons, far too slow in Excel.
     for col, name in [
-        (9, "is_latest_for_product"),
-        (10, "value_if_latest"),
-        (11, "unmet_qty"),
-        (12, "daily_avg_value"),
+        (10, "is_latest_for_product"),
+        (11, "value_if_latest"),
+        (12, "unmet_qty"),
+        (13, "daily_avg_value"),
     ]:
         inv_sheet.Cells(1, col).Value = name
-    fill_formula_down(inv_sheet, 9, 2, inv_last_row, "=IF(B2<>B3,1,0)")
-    fill_formula_down(inv_sheet, 10, 2, inv_last_row, "=IF(I2=1,G2*H2,0)")
-    fill_formula_down(inv_sheet, 11, 2, inv_last_row, "=MAX(0,D2-G2-E2)")
-    fill_formula_down(inv_sheet, 12, 2, inv_last_row, "=(D2+G2)/2*H2")
+    fill_formula_down(inv_sheet, 10, 2, inv_last_row, "=IF(B2<>B3,1,0)")
+    fill_formula_down(inv_sheet, 11, 2, inv_last_row, "=IF(J2=1,G2*H2,0)")
+    fill_formula_down(inv_sheet, 12, 2, inv_last_row, "=MAX(0,I2-F2)")
+    fill_formula_down(inv_sheet, 13, 2, inv_last_row, "=(D2+G2)/2*H2")
 
     # --- Shipments Data ---------------------------------------------------
     ship_sheet = wb.Sheets.Add(After=wb.Sheets(wb.Sheets.Count))
@@ -247,7 +256,7 @@ def main() -> None:
         ],
         [
             "Fill Rate",
-            "1 - (unmet_demand / total_demand)",
+            "units fulfilled / units demanded",
             "product/warehouse/period",
             "2. Inventory",
         ],
@@ -307,7 +316,7 @@ def main() -> None:
             f"=C2/SUM({sd}!I2:I{sales_last_row})",
             ground_truth.average_order_value_aed,
         ),
-        ("Inventory Value", f"=SUM({iv}!J2:J{inv_last_row})", ground_truth.inventory_value_aed),
+        ("Inventory Value", f"=SUM({iv}!K2:K{inv_last_row})", ground_truth.inventory_value_aed),
         (
             "Stockout Rate",
             f"=COUNTIFS({iv}!G2:G{inv_last_row},0)/COUNTA({iv}!G2:G{inv_last_row})",
@@ -315,7 +324,7 @@ def main() -> None:
         ),
         (
             "Fill Rate",
-            f"=SUM({iv}!F2:F{inv_last_row})/(SUM({iv}!F2:F{inv_last_row})+SUM({iv}!K2:K{inv_last_row}))",
+            f"=SUM({iv}!F2:F{inv_last_row})/SUM({iv}!I2:I{inv_last_row})",
             ground_truth.fill_rate,
         ),
         (
