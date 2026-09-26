@@ -28,6 +28,8 @@ powerbi/*.pbix
 reports/*.pdf
 excel/*.xlsx
 powerbi/data/
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
 
 # OS / IDE
 .DS_Store

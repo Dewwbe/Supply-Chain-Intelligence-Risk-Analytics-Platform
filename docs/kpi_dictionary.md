@@ -38,7 +38,7 @@ around.
 |---|---|---|---|---|---|---|
 | Inventory Value | `SUM(closing_stock * unit_cost)` | date/product/warehouse | `fact_inventory.closing_stock`, `dim_product.unit_cost` | SYNTHETIC (inventory) + SYNTHETIC (unit_cost) | Finance, Supply Chain Manager | Inventory |
 | Stockout Rate | `COUNT(days WHERE closing_stock = 0) / COUNT(available_days)` | product/warehouse/period | `fact_inventory.closing_stock` | SYNTHETIC | Supply Chain Manager, COO | Inventory |
-| Fill Rate | `1 − (unmet_demand / total_demand)`, where `unmet_demand = GREATEST(sold_quantity_requested − sold_quantity_fulfilled, 0)` | product/warehouse/period | `fact_inventory` | SYNTHETIC | Supply Chain Manager, COO | Inventory |
+| Fill Rate | `units_fulfilled / units_demanded` (equivalently `1 − unmet_demand / total_demand`), where `units_demanded = SUM(fact_sales.quantity)` for each (product, day) in `fact_inventory` (the real demand the inventory simulator was fed) and `units_fulfilled = SUM(fact_inventory.sold_quantity)` (capped at available stock) | product/warehouse/period | `fact_inventory`, `fact_sales` | SYNTHETIC (fulfilment) + PUBLIC (demand) | Supply Chain Manager, COO | Inventory |
 | Inventory Turnover | `COGS / average_inventory_value`, `COGS = SUM(quantity * unit_cost)` (sales side), `average_inventory_value = AVG(opening_stock, closing_stock) * unit_cost` | product/warehouse/period | `fact_sales`, `fact_inventory`, `dim_product.unit_cost` | PUBLIC + SYNTHETIC | COO, Finance | Executive Overview, Inventory |
 
 ## 3. Supplier / Logistics

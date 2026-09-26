@@ -25,12 +25,23 @@ stockouts AS (
             / NULLIF(COUNT(*), 0) AS stockout_rate
     FROM warehouse.fact_inventory
 ),
+-- Fill rate = units fulfilled / units demanded. Demand is the real
+-- fact_sales quantity for that product and day (the demand the inventory
+-- simulator was fed); fulfilled is fact_inventory.sold_quantity, which the
+-- simulator caps at available stock. The shortfall is the unmet demand.
+daily_demand AS (
+    SELECT product_key, date_key, SUM(quantity) AS demand_quantity
+    FROM warehouse.fact_sales
+    GROUP BY product_key, date_key
+),
 fill AS (
     SELECT
-        SUM(sold_quantity)::NUMERIC
-            / NULLIF(SUM(sold_quantity + GREATEST(0, opening_stock - closing_stock - received_quantity)), 0)
+        SUM(fi.sold_quantity)::NUMERIC
+            / NULLIF(SUM(COALESCE(dd.demand_quantity, 0)), 0)
             AS fill_rate
-    FROM warehouse.fact_inventory
+    FROM warehouse.fact_inventory fi
+    LEFT JOIN daily_demand dd
+        ON dd.product_key = fi.product_key AND dd.date_key = fi.date_key
 ),
 otd AS (
     SELECT

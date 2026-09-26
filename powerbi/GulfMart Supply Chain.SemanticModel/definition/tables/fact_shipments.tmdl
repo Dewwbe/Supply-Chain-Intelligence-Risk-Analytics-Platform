@@ -4,18 +4,21 @@ table fact_shipments
 	column shipment_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 32e51746-a849-4d71-bfad-10f8a9e6eb72
 		sourceColumn: shipment_key
 
 		annotation SummarizationSetBy = None
 
 	column source_system
 		dataType: string
+		lineageTag: ca50a908-ccac-48c4-9304-7a83ffbb3fdf
 		sourceColumn: source_system
 
 		annotation SummarizationSetBy = Automatic
 
 	column shipment_source_id
 		dataType: string
+		lineageTag: 04a21dde-0d71-4156-a31e-f3d05b367b2c
 		sourceColumn: shipment_source_id
 
 		annotation SummarizationSetBy = Automatic
@@ -23,6 +26,7 @@ table fact_shipments
 	column supplier_key
 		dataType: int64
 		formatString: 0
+		lineageTag: d209f05b-e103-484c-a5e7-60e709954506
 		sourceColumn: supplier_key
 
 		annotation SummarizationSetBy = Automatic
@@ -30,6 +34,7 @@ table fact_shipments
 	column warehouse_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 122fde4d-1429-4189-85c7-1ec7f0985658
 		sourceColumn: warehouse_key
 
 		annotation SummarizationSetBy = Automatic
@@ -37,6 +42,7 @@ table fact_shipments
 	column product_key
 		dataType: int64
 		formatString: 0
+		lineageTag: bc5db87a-4cc2-4387-a083-76600aeabf43
 		sourceColumn: product_key
 
 		annotation SummarizationSetBy = Automatic
@@ -44,6 +50,7 @@ table fact_shipments
 	column transport_key
 		dataType: int64
 		formatString: 0
+		lineageTag: ef631573-48d7-4dcc-a79a-5aced9f0aff6
 		sourceColumn: transport_key
 
 		annotation SummarizationSetBy = Automatic
@@ -51,6 +58,7 @@ table fact_shipments
 	column order_date_key
 		dataType: int64
 		formatString: 0
+		lineageTag: d6c3a7c0-0bd6-4f19-aeb9-67921035a6f3
 		sourceColumn: order_date_key
 
 		annotation SummarizationSetBy = Automatic
@@ -58,6 +66,7 @@ table fact_shipments
 	column expected_delivery_date_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 61bb9ebe-ce25-4a68-b396-69ab7a5dd268
 		sourceColumn: expected_delivery_date_key
 
 		annotation SummarizationSetBy = Automatic
@@ -65,6 +74,7 @@ table fact_shipments
 	column actual_delivery_date_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 8b9af041-6458-418f-86e8-86b8277ac434
 		sourceColumn: actual_delivery_date_key
 
 		annotation SummarizationSetBy = Automatic
@@ -72,12 +82,14 @@ table fact_shipments
 	column quantity
 		dataType: int64
 		formatString: #,0
+		lineageTag: 31e4c629-157b-402a-8081-4f8b75feed2e
 		sourceColumn: quantity
 
 		annotation SummarizationSetBy = Automatic
 
 	column transport_mode
 		dataType: string
+		lineageTag: 4af643f7-b97c-4fff-8efd-667f9423c05e
 		sourceColumn: transport_mode
 
 		annotation SummarizationSetBy = Automatic
@@ -85,6 +97,7 @@ table fact_shipments
 	column transport_cost
 		dataType: double
 		formatString: #,0.00
+		lineageTag: 3229ae8c-d003-43b7-b349-bca1495b3d6a
 		sourceColumn: transport_cost
 
 		annotation SummarizationSetBy = Automatic

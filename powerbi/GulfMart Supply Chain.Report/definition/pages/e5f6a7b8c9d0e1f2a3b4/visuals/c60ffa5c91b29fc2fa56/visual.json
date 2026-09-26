@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "c60ffa5c91b29fc2fa56",
+  "position": {
+    "x": 1170,
+    "y": 250,
+    "z": 7,
+    "height": 185,
+    "width": 730,
+    "tabOrder": 7
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Scenario Projected Inventory Value"
+                }
+              },
+              "queryRef": "_Measures.Scenario Projected Inventory Value",
+              "nativeQueryRef": "Scenario Projected Inventory Value"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

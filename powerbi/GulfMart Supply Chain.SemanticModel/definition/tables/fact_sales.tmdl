@@ -4,24 +4,28 @@ table fact_sales
 	column sales_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 37829ed8-eec6-4b21-99f3-1f9d6a4cef6d
 		sourceColumn: sales_key
 
 		annotation SummarizationSetBy = None
 
 	column source_system
 		dataType: string
+		lineageTag: 337fdd46-8af5-4dfe-b3df-bd6983034345
 		sourceColumn: source_system
 
 		annotation SummarizationSetBy = Automatic
 
 	column order_id
 		dataType: string
+		lineageTag: 17201ab2-8dd9-42b5-a05d-ccbe23781179
 		sourceColumn: order_id
 
 		annotation SummarizationSetBy = Automatic
 
 	column order_line_item_id
 		dataType: string
+		lineageTag: e95d5b48-2c0f-4934-b702-99d170225aac
 		sourceColumn: order_line_item_id
 
 		annotation SummarizationSetBy = Automatic
@@ -29,6 +33,7 @@ table fact_sales
 	column date_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 27e51673-acbe-4ab8-a28d-e1ff3a399cce
 		sourceColumn: date_key
 
 		annotation SummarizationSetBy = Automatic
@@ -36,6 +41,7 @@ table fact_sales
 	column product_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 53e6d39f-09be-402b-ab9d-2d0926a396b1
 		sourceColumn: product_key
 
 		annotation SummarizationSetBy = Automatic
@@ -43,6 +49,7 @@ table fact_sales
 	column customer_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 31f88e45-f2c1-4330-8ec5-3dd7e9aa3271
 		sourceColumn: customer_key
 
 		annotation SummarizationSetBy = Automatic
@@ -50,6 +57,7 @@ table fact_sales
 	column location_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 84dfb214-22d8-49c6-970b-3e72d08abe78
 		sourceColumn: location_key
 
 		annotation SummarizationSetBy = Automatic
@@ -57,6 +65,7 @@ table fact_sales
 	column store_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 1f467444-8f8b-45d9-b49b-990b06dbf4ee
 		sourceColumn: store_key
 
 		annotation SummarizationSetBy = Automatic
@@ -64,6 +73,7 @@ table fact_sales
 	column quantity
 		dataType: int64
 		formatString: #,0
+		lineageTag: fab258e1-1b3a-4efa-ba6f-3630e9dc0338
 		sourceColumn: quantity
 
 		annotation SummarizationSetBy = Automatic
@@ -71,6 +81,7 @@ table fact_sales
 	column unit_price
 		dataType: double
 		formatString: #,0.00
+		lineageTag: 64fd5e7b-088d-4a01-b118-ca6ac94941d1
 		sourceColumn: unit_price
 
 		annotation SummarizationSetBy = Automatic
@@ -78,6 +89,7 @@ table fact_sales
 	column discount
 		dataType: double
 		formatString: #,0.00
+		lineageTag: f2ecfd0f-cd9f-413e-97c8-5b4f21bf8e94
 		sourceColumn: discount
 
 		annotation SummarizationSetBy = Automatic
@@ -85,24 +97,28 @@ table fact_sales
 	column sales_amount
 		dataType: double
 		formatString: #,0.00
+		lineageTag: 1fbb980c-1110-462f-9d72-7ffe28719ac7
 		sourceColumn: sales_amount
 
 		annotation SummarizationSetBy = Automatic
 
 	column order_status
 		dataType: string
+		lineageTag: 2443cc37-b595-4c00-b604-2ef2b4936812
 		sourceColumn: order_status
 
 		annotation SummarizationSetBy = Automatic
 
 	column delivery_status
 		dataType: string
+		lineageTag: 90599079-5182-446e-995d-dc522f147a48
 		sourceColumn: delivery_status
 
 		annotation SummarizationSetBy = Automatic
 
 	column original_currency
 		dataType: string
+		lineageTag: 7d869954-e3f2-4104-bf02-4e8ef28ba770
 		sourceColumn: original_currency
 
 		annotation SummarizationSetBy = Automatic
@@ -110,6 +126,7 @@ table fact_sales
 	column original_sales_amount
 		dataType: double
 		formatString: #,0.00
+		lineageTag: 3107ec16-2ad0-46e9-bca6-09ac7203fd2c
 		sourceColumn: original_sales_amount
 
 		annotation SummarizationSetBy = Automatic

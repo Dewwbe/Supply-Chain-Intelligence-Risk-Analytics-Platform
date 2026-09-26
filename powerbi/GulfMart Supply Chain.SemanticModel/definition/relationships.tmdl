@@ -87,9 +87,8 @@ relationship c1000001-0000-4000-8000-000000000015
 	toColumn: dim_date.date_key
 
 relationship c1000001-0000-4000-8000-000000000016
-	fromCardinality: one
-	toCardinality: one
 	crossFilteringBehavior: bothDirections
+	fromCardinality: one
 	fromColumn: fact_returns.sales_key
 	toColumn: fact_sales.sales_key
 

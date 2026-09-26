@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "e55a0a50a06c0e195daf",
+  "position": {
+    "x": 920,
+    "y": 20,
+    "z": 4,
+    "height": 200,
+    "width": 480,
+    "tabOrder": 4
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Scenario Fill Rate"
+                }
+              },
+              "queryRef": "_Measures.Scenario Fill Rate",
+              "nativeQueryRef": "Scenario Fill Rate"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

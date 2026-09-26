@@ -4,12 +4,14 @@ table fact_purchase_orders
 	column po_key
 		dataType: int64
 		formatString: 0
+		lineageTag: cb2cb22f-ae93-48a0-a31d-3a0664288a85
 		sourceColumn: po_key
 
 		annotation SummarizationSetBy = None
 
 	column po_source_id
 		dataType: string
+		lineageTag: d42c2cba-748e-4158-85d2-84582cab4ca7
 		sourceColumn: po_source_id
 
 		annotation SummarizationSetBy = Automatic
@@ -17,6 +19,7 @@ table fact_purchase_orders
 	column supplier_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 3c651fd9-ba4e-4b9c-9811-1f1c592844a7
 		sourceColumn: supplier_key
 
 		annotation SummarizationSetBy = Automatic
@@ -24,6 +27,7 @@ table fact_purchase_orders
 	column warehouse_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 83fdc2b0-37c7-4bd2-b47f-746f33777cad
 		sourceColumn: warehouse_key
 
 		annotation SummarizationSetBy = Automatic
@@ -31,6 +35,7 @@ table fact_purchase_orders
 	column product_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 762e789e-df25-4e1a-8edd-facb8cb6e0b9
 		sourceColumn: product_key
 
 		annotation SummarizationSetBy = Automatic
@@ -38,6 +43,7 @@ table fact_purchase_orders
 	column order_date_key
 		dataType: int64
 		formatString: 0
+		lineageTag: d7238950-b9b3-4cd0-8471-3597330557ae
 		sourceColumn: order_date_key
 
 		annotation SummarizationSetBy = Automatic
@@ -45,6 +51,7 @@ table fact_purchase_orders
 	column expected_delivery_date_key
 		dataType: int64
 		formatString: 0
+		lineageTag: aaea004a-2628-4952-8702-fd11d1974132
 		sourceColumn: expected_delivery_date_key
 
 		annotation SummarizationSetBy = Automatic
@@ -52,12 +59,14 @@ table fact_purchase_orders
 	column actual_delivery_date_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 21f430e5-d251-4165-96a5-911c29dfbf39
 		sourceColumn: actual_delivery_date_key
 
 		annotation SummarizationSetBy = Automatic
 
 	column order_status
 		dataType: string
+		lineageTag: a803b42b-05c7-40ec-ab20-4ef574587073
 		sourceColumn: order_status
 
 		annotation SummarizationSetBy = Automatic
@@ -65,6 +74,7 @@ table fact_purchase_orders
 	column quantity
 		dataType: int64
 		formatString: #,0
+		lineageTag: fb19f149-4fbb-4380-a8b5-b7ce31f6ba80
 		sourceColumn: quantity
 
 		annotation SummarizationSetBy = Automatic
@@ -72,6 +82,7 @@ table fact_purchase_orders
 	column unit_cost
 		dataType: double
 		formatString: #,0.00
+		lineageTag: 6c154e37-addc-49c6-97c9-81636b645607
 		sourceColumn: unit_cost
 
 		annotation SummarizationSetBy = Automatic
@@ -79,6 +90,7 @@ table fact_purchase_orders
 	column total_cost
 		dataType: double
 		formatString: #,0.00
+		lineageTag: d15d4748-7617-4db6-b502-c2b73280cff8
 		sourceColumn: total_cost
 
 		annotation SummarizationSetBy = Automatic

@@ -4,36 +4,42 @@ table dim_product
 	column product_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 192dea3d-01d3-4a58-a714-c6575dcd3456
 		sourceColumn: product_key
 
 		annotation SummarizationSetBy = None
 
 	column product_source_id
 		dataType: string
+		lineageTag: 2b1afb94-bf20-471e-802a-cc23c332a454
 		sourceColumn: product_source_id
 
 		annotation SummarizationSetBy = Automatic
 
 	column product_name
 		dataType: string
+		lineageTag: 78232b69-9002-4c86-9c99-76f282154111
 		sourceColumn: product_name
 
 		annotation SummarizationSetBy = Automatic
 
 	column category
 		dataType: string
+		lineageTag: 27f3dd48-6a3d-4a64-ab9b-420d4570d360
 		sourceColumn: category
 
 		annotation SummarizationSetBy = Automatic
 
 	column subcategory
 		dataType: string
+		lineageTag: 0963e0f4-b867-438c-be7f-438dfb0ffaea
 		sourceColumn: subcategory
 
 		annotation SummarizationSetBy = Automatic
 
 	column brand
 		dataType: string
+		lineageTag: 76259fc1-dd5c-488f-a33d-5867f3d42f1a
 		sourceColumn: brand
 
 		annotation SummarizationSetBy = Automatic
@@ -41,6 +47,7 @@ table dim_product
 	column unit_cost
 		dataType: double
 		formatString: #,0.00
+		lineageTag: 91160bf8-7f47-4f5d-9530-599e2af2aba1
 		sourceColumn: unit_cost
 
 		annotation SummarizationSetBy = Automatic
@@ -48,6 +55,7 @@ table dim_product
 	column unit_price
 		dataType: double
 		formatString: #,0.00
+		lineageTag: dc91fe07-6baa-4946-9e60-3450b5b681bb
 		sourceColumn: unit_price
 
 		annotation SummarizationSetBy = Automatic
@@ -55,6 +63,7 @@ table dim_product
 	column supplier_key
 		dataType: int64
 		formatString: 0
+		lineageTag: 4e9fdbca-8e92-4e8c-a930-36953de8b72e
 		sourceColumn: supplier_key
 
 		annotation SummarizationSetBy = Automatic

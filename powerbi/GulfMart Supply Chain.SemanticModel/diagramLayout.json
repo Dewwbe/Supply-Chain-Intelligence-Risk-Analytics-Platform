@@ -1,0 +1,256 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 2044.0851101200778,
+            "y": 477.91564062656812
+          },
+          "nodeIndex": "_Measures",
+          "nodeLineageTag": "539b2a22-c748-4f83-b59a-fbe370ddf527",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1789.9294926623047,
+            "y": 956.4616172510913
+          },
+          "nodeIndex": "dim_customer",
+          "nodeLineageTag": "4586de62-ddca-424d-9255-b8f4b98e1782",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1009.2379409349226,
+            "y": 278.85741034975604
+          },
+          "nodeIndex": "dim_date",
+          "nodeLineageTag": "6724fb2a-288c-4750-a8b3-e9befbf8a89a",
+          "size": {
+            "height": 296,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1520.188405577042,
+            "y": 725.57242550865169
+          },
+          "nodeIndex": "dim_location",
+          "nodeLineageTag": "e83129cd-ac45-41c7-92ba-11a391bea0ec",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 720.45114553037888,
+            "y": 390.42516412341172
+          },
+          "nodeIndex": "dim_product",
+          "nodeLineageTag": "859f5bbe-044a-4494-9071-00f06ba5d124",
+          "size": {
+            "height": 296,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1810.0851101200781,
+            "y": 574.42872233123876
+          },
+          "nodeIndex": "dim_store",
+          "nodeLineageTag": "bc427381-a196-49da-8f7d-38a3471a0d66",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 151.7764494608839,
+            "y": 403.31682006113988
+          },
+          "nodeIndex": "dim_supplier",
+          "nodeLineageTag": "33373fc1-8242-4e05-8364-b45b02ad228d",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 140.70433924527288,
+            "y": 981.83128125313624
+          },
+          "nodeIndex": "dim_transport",
+          "nodeLineageTag": "bd8e8780-c7c8-45d3-aee6-22446a6a7caf",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1102.4524066696558,
+            "y": 630.97866886940221
+          },
+          "nodeIndex": "dim_warehouse",
+          "nodeLineageTag": "f8ba6ddc-1467-48eb-a8c0-49190a0d1fb8",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1087.0614476503313,
+            "y": -50
+          },
+          "nodeIndex": "fact_inventory",
+          "nodeLineageTag": "ae13362a-db59-48a3-8d51-ac6a4d3bec02",
+          "size": {
+            "height": 272,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 461.73104574745639,
+            "y": 33.338384611182846
+          },
+          "nodeIndex": "fact_purchase_orders",
+          "nodeLineageTag": "57a430e9-3e02-4144-8064-4472c29bffda",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1680.1264856535508,
+            "y": 250.00605916794132
+          },
+          "nodeIndex": "fact_returns",
+          "nodeLineageTag": "611eb6e2-111a-43db-9f85-27c179a9c1c0",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1391.2403573252145,
+            "y": 369.63718991031226
+          },
+          "nodeIndex": "fact_sales",
+          "nodeLineageTag": "f3b03f31-a1cc-433d-9bc5-518a08a6cad8",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 430.63626808498543,
+            "y": 683.79052920264166
+          },
+          "nodeIndex": "fact_shipments",
+          "nodeLineageTag": "3a799b5f-4a23-486a-98d2-244b066063aa",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": 199.24994227829302
+          },
+          "nodeIndex": "supplier_risk_scores",
+          "nodeLineageTag": "a1b2c3d4-0001-4000-8000-000000000001",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2278.0851101200778,
+            "y": 515.91564062656812
+          },
+          "nodeIndex": "Demand Change Parameter",
+          "nodeLineageTag": "11b584a8-e0aa-471d-8138-c917e3afd0bd",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2512.0851101200778,
+            "y": 515.91564062656812
+          },
+          "nodeIndex": "Lead Time Change Parameter",
+          "nodeLineageTag": "ce88f93f-4d82-45d0-83a3-9e4402162508",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2746.0851101200778,
+            "y": 515.91564062656812
+          },
+          "nodeIndex": "Transport Cost Change Parameter",
+          "nodeLineageTag": "acb68260-da88-4115-940b-ac75a840b9f6",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

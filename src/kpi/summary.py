@@ -69,12 +69,24 @@ def compute_kpi_summary() -> KpiSummary:
     )
     stockout_rate = float((inventory["closing_stock"] == 0).mean())
 
-    # Same unmet-demand proxy as executive_summary.sql: stock that should
-    # have depleted via sales beyond what was actually recorded as sold.
-    unmet = (
-        inventory["opening_stock"] - inventory["closing_stock"] - inventory["received_quantity"]
-    ).clip(lower=0)
-    fill_rate = float(inventory["sold_quantity"].sum() / (inventory["sold_quantity"] + unmet).sum())
+    # Same definition as executive_summary.sql: units fulfilled / units
+    # demanded, where demand is the real fact_sales quantity for that
+    # product and day (what the inventory simulator was fed) and fulfilled
+    # is fact_inventory.sold_quantity (capped at available stock).
+    daily_demand = pd.read_sql_query(
+        """
+        SELECT fs.product_key, dd.full_date AS date, SUM(fs.quantity) AS demand_quantity
+        FROM warehouse.fact_sales fs
+        JOIN warehouse.dim_date dd ON dd.date_key = fs.date_key
+        GROUP BY fs.product_key, dd.full_date
+        """,
+        engine,
+        parse_dates=["date"],
+    )
+    demand = inventory[["product_key", "date"]].merge(
+        daily_demand, on=["product_key", "date"], how="left"
+    )["demand_quantity"]
+    fill_rate = float(inventory["sold_quantity"].sum() / demand.fillna(0).sum())
 
     # Inventory Value is a balance-sheet-style snapshot, not a sum across
     # every historical day (that would count the same stock many times
