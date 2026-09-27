@@ -23,19 +23,28 @@ class Settings(BaseSettings):
         default="postgresql+psycopg://gulfmart:gulfmart@localhost:5432/gulfmart_analytics"
     )
 
-    # Caching (KPI / forecast endpoints only — see README "Software layer")
+    # Caching — warehouse-backed reads only, never per-request what-if
+    # results (see README "Rate limiting, caching, throttling").
     cache_backend: str = Field(default="memory")  # "memory" | "redis"
     redis_url: str = Field(default="redis://localhost:6379/0")
     kpi_cache_ttl_seconds: int = Field(default=300)
     forecast_cache_ttl_seconds: int = Field(default=3600)
+    anomaly_cache_ttl_seconds: int = Field(default=3600)
 
-    # Rate limiting (applied to /api/v1/* only, not /health)
+    # Rate limiting — per route, /api/v1/* only; /health is never limited.
     rate_limit_default: str = Field(default="60/minute")
+    # Routes whose cache miss runs a model fit or a full-history scan.
+    rate_limit_expensive: str = Field(default="10/minute")
 
     # Outbound throttling for external data pulls (etl/extract/uae_open_data.py)
     external_api_rate_per_second: float = Field(default=2.0)
 
     log_level: str = Field(default="INFO")
+
+    # Kaggle credentials for etl/extract/download_raw.py (optional here: the
+    # CLI also accepts ~/.kaggle/kaggle.json or real environment variables).
+    kaggle_username: str = Field(default="")
+    kaggle_key: str = Field(default="")
 
 
 @lru_cache

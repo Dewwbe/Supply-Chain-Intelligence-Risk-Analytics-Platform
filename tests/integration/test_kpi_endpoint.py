@@ -1,8 +1,16 @@
+"""/api/v1/kpis against the real warehouse (skipped unless it's loaded)."""
+
+import pytest
+
+pytestmark = pytest.mark.warehouse
+
+
 def test_kpi_summary_ok(client):
-    response = client.get("/api/v1/kpis/summary")
+    response = client.get("/api/v1/kpis")
     assert response.status_code == 200
     body = response.json()
-    assert "revenue_aed" in body
+    assert body["revenue_aed"] > 0
+    assert 0 < body["fill_rate"] <= 1
 
 
 def test_kpi_summary_is_cached_on_second_call(client, monkeypatch):
@@ -17,9 +25,6 @@ def test_kpi_summary_is_cached_on_second_call(client, monkeypatch):
 
     monkeypatch.setattr(kpis, "_compute_kpi_summary", counting_compute)
 
-    client.get("/api/v1/kpis/summary")
-    client.get("/api/v1/kpis/summary")
-
-    # Cache may already hold a value from a prior test run in-process;
-    # assert it was not recomputed twice within this test.
-    assert calls["n"] <= 1
+    client.get("/api/v1/kpis")
+    client.get("/api/v1/kpis")
+    assert calls["n"] == 1

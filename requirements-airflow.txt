@@ -1,0 +1,10 @@
+# Optional: Airflow orchestration (airflow/dags/gulfmart_pipeline.py).
+# Airflow must be installed against its official constraints file, or pip
+# resolves an incompatible dependency set. Use a separate virtualenv:
+#
+#   pip install -r requirements-airflow.txt \
+#     --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.10.1/constraints-3.11.txt"
+#
+# The local equivalent without Airflow is `python -m etl.run_local`, which
+# runs the same task order in one process.
+apache-airflow==2.10.1

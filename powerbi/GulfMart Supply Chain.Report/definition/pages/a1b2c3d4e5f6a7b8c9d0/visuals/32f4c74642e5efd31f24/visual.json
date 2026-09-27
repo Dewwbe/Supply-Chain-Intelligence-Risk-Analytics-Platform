@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_product.category",
-              "nativeQueryRef": "category"
+              "nativeQueryRef": "category",
+              "active": true
             }
           ]
         },

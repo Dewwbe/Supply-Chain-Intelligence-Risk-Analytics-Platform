@@ -1,4 +1,8 @@
-version: "3.9"
+# Services: postgres (warehouse), redis (shared API cache), api (FastAPI).
+#   docker compose up -d --build        # all three
+#   docker compose up -d postgres redis # just the infrastructure, for local ETL/dev
+# Host ports can be changed without editing this file, e.g. when a native
+# Postgres already owns 5432:  POSTGRES_PORT=5433 docker compose up -d
 
 services:
   postgres:
@@ -8,31 +12,48 @@ services:
       POSTGRES_PASSWORD: gulfmart
       POSTGRES_DB: gulfmart_analytics
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./database/schema:/docker-entrypoint-initdb.d
+      - ./database:/database:ro
+      - ./database/docker-init.sh:/docker-entrypoint-initdb.d/00_init.sh:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U gulfmart"]
+      test: ["CMD-SHELL", "pg_isready -U gulfmart -d gulfmart_analytics"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
 
   redis:
     image: redis:7-alpine
+    command: ["redis-server", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   api:
     build: .
-    env_file: .env
+    image: gulfmart-api:latest
+    # .env is optional: the values below are what the API needs inside the
+    # compose network (service names, not localhost), and override .env.
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: postgresql+psycopg://gulfmart:gulfmart@postgres:5432/gulfmart_analytics
+      CACHE_BACKEND: redis
+      REDIS_URL: redis://redis:6379/0
     ports:
-      - "8000:8000"
+      - "${API_PORT:-8000}:8000"
     depends_on:
       postgres:
         condition: service_healthy
       redis:
-        condition: service_started
+        condition: service_healthy
+    restart: unless-stopped
 
 volumes:
   pgdata:

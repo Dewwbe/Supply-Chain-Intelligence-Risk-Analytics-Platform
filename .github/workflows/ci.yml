@@ -1,47 +1,105 @@
 name: CI
 
+# lint -> type-check -> test -> build, on every push and every pull request.
 on:
   push:
-    branches: [main]
   pull_request:
-    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: "3.11"
 
 jobs:
-  lint-type-test:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-          cache: "pip"
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Install linters (pinned to requirements.txt versions)
+        run: pip install ruff==0.6.4 black==24.8.0
+      - name: Ruff (lint, import order, no print())
+        run: ruff check .
+      - name: Black (format)
+        run: black --check .
 
+  type-check:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: requirements*.txt
       - name: Install dependencies
         run: pip install -r requirements.txt
-
-      - name: Lint (ruff)
-        run: ruff check src tests
-
-      - name: Format check (black)
-        run: black --check src tests
-
-      - name: Type check (mypy)
+      - name: mypy (strict)
         run: mypy src
 
-      - name: Unit + integration tests
-        run: pytest --cov=src --cov-report=xml
-
-      - name: Upload coverage
+  test:
+    needs: type-check
+    runs-on: ubuntu-latest
+    services:
+      # A real Redis, so the Redis cache backend is integration-tested in CI.
+      # Warehouse integration tests skip here: they need the ETL-loaded
+      # warehouse (source data is downloaded from Kaggle, not committed).
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping" --health-interval 5s
+          --health-timeout 3s --health-retries 10
+    env:
+      REDIS_URL: redis://localhost:6379/0
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: requirements*.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Unit + integration tests (coverage must stay >= 80% on src/)
+        run: pytest -rs --cov=src --cov-report=xml --cov-report=term --cov-fail-under=80
+      - name: Upload coverage report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: coverage.xml
 
-  docker-build:
-    needs: lint-type-test
+  build:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build image
+      - name: Build the API image
         run: docker build -t gulfmart-api:ci .
+      - name: Boot postgres + redis + api and probe them
+        run: |
+          docker compose up -d --wait
+          curl --fail --silent http://localhost:8000/health
+          # The warehouse starts empty in CI, so readiness must report that
+          # clearly (503 + "empty") rather than crash — and analytics routes
+          # must answer 503 with instructions, not 500.
+          ready=$(curl --silent --output /dev/null --write-out "%{http_code}" http://localhost:8000/health/ready)
+          test "$ready" = "503"
+          curl --silent http://localhost:8000/health/ready | grep -q '"empty'
+          kpis=$(curl --silent --output /dev/null --write-out "%{http_code}" http://localhost:8000/api/v1/kpis)
+          test "$kpis" = "503"
+      - name: Service logs (on failure)
+        if: failure()
+        run: docker compose logs
+      - name: Tear down
+        if: always()
+        run: docker compose down -v

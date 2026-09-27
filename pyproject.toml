@@ -7,15 +7,29 @@ requires-python = ">=3.11"
 [tool.black]
 line-length = 100
 target-version = ["py311"]
+extend-exclude = "notebooks/"
 
 [tool.ruff]
 line-length = 100
 target-version = "py311"
 src = ["src"]
+extend-exclude = ["notebooks"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "B", "UP", "N"]
+# T20 = no print(): services and pipelines log through structlog (JSON lines).
+select = ["E", "F", "I", "B", "UP", "N", "T20"]
 ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+# Interactive CLI tools whose console output *is* the interface (verification
+# tables, build summaries) — not services, so print() is intentional there.
+"excel/*.py" = ["T20"]
+"powerbi/*.py" = ["T20"]
+"reports/**/*.py" = ["T20"]
+
+[tool.ruff.lint.flake8-bugbear]
+# FastAPI's dependency/parameter declarations are evaluated once by design.
+extend-immutable-calls = ["fastapi.Query", "fastapi.Depends", "fastapi.Path"]
 
 [tool.mypy]
 python_version = "3.11"
@@ -25,8 +39,23 @@ exclude = ["notebooks", "etl/extract", "etl/transform"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
 addopts = "--cov=src --cov-report=term-missing"
+markers = [
+    "warehouse: needs Postgres reachable and loaded (skipped otherwise)",
+    "redis: needs a Redis server at REDIS_URL (skipped otherwise)",
+]
+filterwarnings = [
+    # statsmodels warns on short seasonal histories; expected at this data volume
+    "ignore::statsmodels.tools.sm_exceptions.ConvergenceWarning",
+]
 
 [tool.coverage.run]
 source = ["src"]
 omit = ["*/__init__.py"]
+
+[tool.coverage.report]
+# Enforced in CI (`pytest --cov-fail-under=80`) rather than here, so running a
+# single test file locally doesn't fail on project-wide coverage.
+show_missing = true
+skip_covered = true
