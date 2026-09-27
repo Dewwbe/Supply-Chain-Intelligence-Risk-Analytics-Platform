@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "Demand Change Parameter.Demand Change Parameter",
-              "nativeQueryRef": "Demand Change Parameter"
+              "nativeQueryRef": "Demand Change Parameter",
+              "active": true
             }
           ]
         }

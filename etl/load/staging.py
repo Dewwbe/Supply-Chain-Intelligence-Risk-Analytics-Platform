@@ -116,4 +116,5 @@ def load_staging(
     """Load every source's extract dict into its staging tables."""
     load_olist(olist_frames)
     load_dataco(dataco_frames)
-    load_uae_trade(uae_trade_frames)
+    if "trade" in uae_trade_frames:  # optional source, see etl/extract/uae_open_data.run()
+        load_uae_trade(uae_trade_frames)

@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "Transport Cost Change Parameter.Transport Cost Change Parameter",
-              "nativeQueryRef": "Transport Cost Change Parameter"
+              "nativeQueryRef": "Transport Cost Change Parameter",
+              "active": true
             }
           ]
         }

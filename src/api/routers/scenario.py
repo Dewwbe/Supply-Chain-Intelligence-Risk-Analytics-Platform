@@ -1,18 +1,25 @@
 """Scenario simulation endpoint.
 
-Deliberately NOT cached — each call is a distinct what-if calculation
-(different demand/lead-time/cost inputs), so caching would return stale or
-wrong answers. Still rate-limited as part of /api/v1/*.
+The scenario *result* is deliberately NOT cached — each call is a distinct
+what-if calculation, so a cached answer would be wrong for the next inputs.
+The *baseline* it's measured against IS cached: it's 5 warehouse queries
+that return the same numbers until the next ETL run, and without caching
+every slider movement in a client would repeat them. Rate-limited at the
+default tier.
 """
+
+from dataclasses import asdict
 
 from fastapi import APIRouter, Request
 from pydantic import BaseModel, Field
 
+from src.api.core.cache import get_cache
 from src.api.core.config import get_settings
-from src.api.middleware.rate_limit import limiter
+from src.api.middleware.rate_limit import DEFAULT_LIMIT, limiter
 
 router = APIRouter(prefix="/scenario", tags=["scenario"])
 settings = get_settings()
+BASELINE_CACHE_KEY = "scenario:baseline"
 
 
 class ScenarioRequest(BaseModel):
@@ -40,15 +47,19 @@ class ScenarioResult(BaseModel):
 
 
 @router.post("/simulate", response_model=ScenarioResult)
-@limiter.limit(settings.rate_limit_default)
+@limiter.limit(DEFAULT_LIMIT)
 def simulate(request: Request, payload: ScenarioRequest) -> ScenarioResult:
     """Run the baseline-vs-scenario calculation.
 
-    Loads the real baseline from the warehouse (src/scenario_model/data.py)
-    and applies the requested deltas through the statistical model in
+    Applies the requested deltas to the real warehouse baseline
+    (src/scenario_model/data.py) through the statistical model in
     src/scenario_model/engine.py — every number returned is produced by
     that model, never hardcoded here.
     """
+    from src.scenario_model.data import BaselineMetrics, load_baseline
     from src.scenario_model.engine import run_scenario
 
-    return run_scenario(payload)
+    baseline = get_cache().get_or_compute(
+        BASELINE_CACHE_KEY, settings.kpi_cache_ttl_seconds, lambda: asdict(load_baseline())
+    )
+    return run_scenario(payload, BaselineMetrics(**baseline))

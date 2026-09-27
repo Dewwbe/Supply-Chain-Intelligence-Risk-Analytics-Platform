@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_location.emirate",
-              "nativeQueryRef": "emirate"
+              "nativeQueryRef": "emirate",
+              "active": true
             }
           ]
         }

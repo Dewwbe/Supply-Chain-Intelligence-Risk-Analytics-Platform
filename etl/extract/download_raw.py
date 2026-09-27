@@ -26,11 +26,13 @@ Requirements:
 from __future__ import annotations
 
 import argparse
+import os
 import shutil
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
+from src.api.core.config import get_settings
 from src.common.http import ThrottledClient
 from src.common.logging import configure_logging, get_logger
 
@@ -103,6 +105,21 @@ def _require_kaggle_cli() -> None:
         )
 
 
+def _kaggle_env() -> dict[str, str]:
+    """The process environment plus KAGGLE_USERNAME/KAGGLE_KEY from .env.
+
+    The kaggle CLI only reads real environment variables (or kaggle.json),
+    never .env; this passes .env's values through without overriding any
+    already exported in the shell.
+    """
+    env = dict(os.environ)
+    settings = get_settings()
+    if settings.kaggle_username and settings.kaggle_key:
+        env.setdefault("KAGGLE_USERNAME", settings.kaggle_username)
+        env.setdefault("KAGGLE_KEY", settings.kaggle_key)
+    return env
+
+
 def download_kaggle_dataset(slug: str, dest_dir: Path) -> None:
     """Download and unzip a Kaggle dataset via the `kaggle` CLI."""
     _require_kaggle_cli()
@@ -111,6 +128,7 @@ def download_kaggle_dataset(slug: str, dest_dir: Path) -> None:
     subprocess.run(
         ["kaggle", "datasets", "download", "-d", slug, "-p", str(dest_dir), "--unzip"],
         check=True,
+        env=_kaggle_env(),
     )
     logger.info("kaggle_download_done", slug=slug, dest=str(dest_dir))
 
@@ -123,6 +141,7 @@ def download_kaggle_competition(slug: str, dest_dir: Path) -> None:
     subprocess.run(
         ["kaggle", "competitions", "download", "-c", slug, "-p", str(dest_dir)],
         check=True,
+        env=_kaggle_env(),
     )
     for zip_path in dest_dir.glob("*.zip"):
         shutil.unpack_archive(str(zip_path), str(dest_dir))
@@ -176,15 +195,27 @@ def main() -> None:
     if args.list:
         for source in REGISTRY.values():
             core = "core" if source.phase1_core else "optional"
-            print(f"{source.name:12} {source.kind:20} {core:10} -> data/raw/{source.dest_subdir}")
+            logger.info(
+                "registered_dataset",
+                name=source.name,
+                kind=source.kind,
+                scope=core,
+                dest=f"data/raw/{source.dest_subdir}",
+            )
         return
 
     if args.dataset:
         download_dataset(REGISTRY[args.dataset], url_override=args.url)
     elif args.all:
         for source in REGISTRY.values():
-            if source.phase1_core:
-                download_dataset(source)
+            if not source.phase1_core:
+                continue
+            if source.kind == "http" and source.identifier is None:
+                # No stable public URL to default to; these are optional context
+                # data, fetched with --dataset <name> --url <url> when wanted.
+                logger.warning("dataset_skipped_needs_url", name=source.name)
+                continue
+            download_dataset(source)
     else:
         parser.error("pass --dataset <name>, --all, or --list")
 

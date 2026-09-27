@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_transport.carrier_name",
-              "nativeQueryRef": "carrier_name"
+              "nativeQueryRef": "carrier_name",
+              "active": true
             }
           ]
         },

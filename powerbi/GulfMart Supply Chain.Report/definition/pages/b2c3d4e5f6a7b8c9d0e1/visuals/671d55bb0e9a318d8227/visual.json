@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_date.full_date",
-              "nativeQueryRef": "full_date"
+              "nativeQueryRef": "full_date",
+              "active": true
             }
           ]
         },
