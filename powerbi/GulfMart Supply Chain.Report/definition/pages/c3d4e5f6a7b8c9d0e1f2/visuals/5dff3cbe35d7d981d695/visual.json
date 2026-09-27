@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_warehouse.warehouse_name",
-              "nativeQueryRef": "warehouse_name"
+              "nativeQueryRef": "warehouse_name",
+              "active": true
             }
           ]
         },

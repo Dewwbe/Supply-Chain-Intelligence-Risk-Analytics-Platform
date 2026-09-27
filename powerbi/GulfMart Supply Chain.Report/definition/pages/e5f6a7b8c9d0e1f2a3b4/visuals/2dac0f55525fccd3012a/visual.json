@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "Lead Time Change Parameter.Lead Time Change Parameter",
-              "nativeQueryRef": "Lead Time Change Parameter"
+              "nativeQueryRef": "Lead Time Change Parameter",
+              "active": true
             }
           ]
         }

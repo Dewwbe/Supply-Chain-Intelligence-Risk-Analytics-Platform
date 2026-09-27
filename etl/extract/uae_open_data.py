@@ -48,7 +48,16 @@ def fetch_latest(url: str, raw_dir: Path = RAW_DIR) -> Path:
 
 
 def run(raw_dir: Path = RAW_DIR) -> dict[str, pd.DataFrame]:
-    """Read the UAE trade table, keyed to match the other extract.run() shapes."""
+    """Read the UAE trade table, keyed to match the other extract.run() shapes.
+
+    Optional context data: no KPI, model or report depends on it, and its
+    portal URL must be supplied by hand (`download_raw --dataset uae_trade
+    --url ...`). When the file isn't there, returns {} so the rest of the
+    pipeline still loads the warehouse from Olist and DataCo.
+    """
+    if not (raw_dir / FILENAME).exists():
+        logger.warning("uae_trade_skipped", reason="file not downloaded", path=str(raw_dir))
+        return {}
     df = read_trade(raw_dir)
     logger.info("uae_trade_read", table="trade", rows=len(df))
     return {"trade": df}

@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_supplier.supplier_name",
-              "nativeQueryRef": "supplier_name"
+              "nativeQueryRef": "supplier_name",
+              "active": true
             }
           ]
         },
@@ -45,7 +46,8 @@
                 }
               },
               "queryRef": "_Measures.Average Lead Time",
-              "nativeQueryRef": "Average Lead Time"
+              "nativeQueryRef": "Average Lead Time",
+              "active": true
             }
           ]
         },

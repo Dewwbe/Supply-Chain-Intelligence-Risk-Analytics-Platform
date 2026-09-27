@@ -2,7 +2,7 @@
 
 Cached (see core/cache.py) because these read from the warehouse, which
 refreshes once a day via Airflow — recomputing on every request is wasted
-work. Rate-limited because they're part of /api/v1/* (see middleware/rate_limit.py).
+work. Rate-limited at the default tier (see middleware/rate_limit.py).
 """
 
 from fastapi import APIRouter, Request
@@ -10,11 +10,12 @@ from pydantic import BaseModel
 
 from src.api.core.cache import get_cache
 from src.api.core.config import get_settings
-from src.api.middleware.rate_limit import limiter
+from src.api.middleware.rate_limit import DEFAULT_LIMIT, limiter
 from src.kpi.summary import compute_kpi_summary
 
 router = APIRouter(prefix="/kpis", tags=["kpis"])
 settings = get_settings()
+CACHE_KEY = "kpi:summary"
 
 
 class KpiSummary(BaseModel):
@@ -50,14 +51,11 @@ def _compute_kpi_summary() -> KpiSummary:
     )
 
 
-@router.get("/summary", response_model=KpiSummary)
-@limiter.limit(settings.rate_limit_default)
+@router.get("", response_model=KpiSummary, summary="Headline KPIs (all-time, network-wide)")
+@router.get("/summary", response_model=KpiSummary, include_in_schema=False)
+@limiter.limit(DEFAULT_LIMIT)
 def kpi_summary(request: Request) -> KpiSummary:
-    cache = get_cache()
-    cached = cache.get("kpi:summary")
-    if cached is not None:
-        return KpiSummary(**cached)
-
-    result = _compute_kpi_summary()
-    cache.set("kpi:summary", result.model_dump(), settings.kpi_cache_ttl_seconds)
-    return result
+    data = get_cache().get_or_compute(
+        CACHE_KEY, settings.kpi_cache_ttl_seconds, lambda: _compute_kpi_summary().model_dump()
+    )
+    return KpiSummary(**data)

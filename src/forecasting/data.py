@@ -58,6 +58,8 @@ def load_daily_demand(product_source_id: str) -> pd.Series:
         query, get_engine(), params={"product_source_id": product_source_id}, parse_dates=["date"]
     )
     daily = df.set_index("date")["quantity"]
+    if daily.empty:  # unknown product: no dates to build a range from
+        return daily
     full_range = pd.date_range(daily.index.min(), daily.index.max(), freq="D")
     return daily.reindex(full_range, fill_value=0)
 
